@@ -185,7 +185,7 @@ input[type=range]{width:100%;accent-color:var(--sky)}
 .ex h3{font-size:1.15rem;font-weight:400}
 .ex p{margin:0;font-size:.86rem;color:var(--text-2);flex:1}
 .ex .go{font-size:.85rem;color:var(--sky-2)}
-.ex.feature{grid-column:span 2;background:linear-gradient(135deg,rgba(76,184,245,.28),rgba(255,255,255,.04))}
+.ex.feature{background:linear-gradient(135deg,rgba(76,184,245,.28),rgba(255,255,255,.04))}
 
 /* Chân trang + chuyển trang */
 .pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:48px 0 20px}
@@ -243,3 +243,5 @@ input[type=range]{width:100%;accent-color:var(--sky)}
   .bar{grid-template-columns:100px 1fr 44px}
   .chart-box{height:250px}
 }
+
+[hidden]{display:none!important}

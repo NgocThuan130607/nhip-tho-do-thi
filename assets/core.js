@@ -54,13 +54,15 @@ const ICONS = {
   recs: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>',
   tools: '<rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/>',
   road: '<path d="M5 21 9 3M19 21 15 3M12 6v2M12 11v2M12 16v2"/>',
+  week: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M7 14h3M7 17h3M14 14h3"/>',
 };
 const PAGES = [
   {href: "index.html", key: "now", label: "Bây giờ", desc: "PM2.5 lúc này, dự báo 5 ngày và việc nên làm ngay."},
   {href: "trai-qua.html", key: "me", label: "Bạn đã trải qua những gì?", desc: "Không khí ngày sinh nhật bạn, tổng lượng bụi bạn đã hít, và thẻ để chia sẻ."},
   {href: "phan-tich.html", key: "story", label: "Phân tích dữ liệu", desc: "Hơn 4 năm dữ liệu: khi nào bụi nhiều nhất, vì sao buổi tối tệ nhất, gió, mưa và Tết."},
   {href: "khuyen-nghi.html", key: "recs", label: "Nên làm gì", desc: "10 khuyến nghị cho gia đình và chính quyền, mỗi khuyến nghị có số liệu làm căn cứ."},
-  {href: "cong-cu.html", key: "tools", label: "Công cụ", desc: "Tính lượng bụi bạn hít mỗi năm, lên lịch hoạt động, lịch ra ngoài theo tháng."},
+  {href: "lich-tuan.html", key: "week", label: "Lịch tuần", desc: "Bảng bụi dự báo từng giờ trong 7 ngày tới. Thêm hoạt động của bạn, trang tự xếp vào giờ ít bụi nhất."},
+  {href: "cong-cu.html", key: "tools", label: "Công cụ", desc: "Tính lượng bụi bạn hít mỗi năm và lịch ra ngoài theo tháng."},
   {href: "lo-trinh.html", key: "road", label: "Lộ trình & phương pháp", desc: "Hướng phát triển, nguồn dữ liệu, cách xử lý và giới hạn."},
 ];
 const icon = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k]}</svg>`;
@@ -98,13 +100,17 @@ const loadInsights = () => fetch("data/insights.json").then(r => r.json()).then(
 });
 
 const live = {};
-async function loadLive(key) {
-  if (live[key]) return live[key];
+async function loadLive(key, days = 5) {
+  const id = key + days;
+  if (live[id]) return live[id];
   const c = CITIES[key];
   const r = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${c.lat}&longitude=${c.lon}` +
-    `&current=pm2_5,us_aqi&hourly=pm2_5&forecast_days=5&timezone=Asia%2FBangkok`);
+    `&current=pm2_5,us_aqi&hourly=pm2_5&forecast_days=${days}&timezone=Asia%2FBangkok`);
   if (!r.ok) throw new Error(r.status);
-  return live[key] = await r.json();
+  const j = await r.json();
+  live[id] = j;
+  if (days === 5) live[key] = j;
+  return j;
 }
 
 // Các giờ dự báo từ giờ hiện tại trở đi

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lịch tuần ít bụi</title>
+<meta name="description" content="Bảng bụi mịn dự báo từng giờ trong 7 ngày tới ở Hà Nội và TP.HCM, và công cụ tự xếp lịch hoạt động vào giờ ít bụi nhất.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%234cb8f5'/><path d='M7 13h12a3 3 0 1 0-3-3M7 19h15a3 3 0 1 1-3 3' stroke='white' stroke-width='2.2' fill='none' stroke-linecap='round'/></svg>">
+<link rel="stylesheet" href="assets/style.css?v=8">
+<style>
+.wk-scroll{overflow-x:auto;margin:0 -4px;padding:0 4px 6px}
+.wk{display:grid;grid-template-columns:92px repeat(24,minmax(30px,1fr));gap:2px;min-width:860px;font-size:.72rem}
+.wk .hh{text-align:center;color:var(--text-3);padding-bottom:4px}
+.wk .dd{display:flex;flex-direction:column;justify-content:center;color:var(--text-2);font-size:.8rem;line-height:1.2;padding-right:6px}
+.wk .dd b{color:var(--text);font-weight:400}
+.wk .c{position:relative;height:38px;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#0a2342;font-variant-numeric:tabular-nums;font-weight:400}
+.wk .c.dark{color:var(--text)}
+.wk .c.est{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.18) 0 3px,transparent 3px 7px)!important;font-style:italic}
+.wk .c.past{opacity:.22}
+.wk .c.act{outline:2px solid #fff;outline-offset:-2px;z-index:1}
+.wk .c .tag{position:absolute;top:1px;left:3px;font-size:.58rem;color:inherit;opacity:.85;font-style:normal}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips label{cursor:pointer}
+.chips input{position:absolute;opacity:0;pointer-events:none}
+.chips span{display:inline-block;padding:7px 12px;border-radius:999px;border:1px solid var(--line-2);font-size:.85rem;color:var(--text-2)}
+.chips input:checked+span{background:var(--sky);border-color:var(--sky);color:#04213a}
+.chips input:focus-visible+span{outline:2px solid var(--sky-2);outline-offset:2px}
+input[type=text]{font:400 .95rem var(--font);color:var(--text);background:rgba(255,255,255,.06);border:1px solid var(--line-2);border-radius:12px;padding:10px 12px;width:100%}
+.acts-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.acts-list .pill{font-size:.85rem;padding:6px 8px 6px 12px}
+.acts-list button{background:none;border:0;color:var(--text-2);cursor:pointer;font-size:1rem;line-height:1;padding:0 4px}
+.day-plan{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.day-plan:last-child{border-bottom:0}
+.day-plan .it{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:6px 0}
+.day-plan .it .t{color:var(--text);font-size:1rem}
+.day-plan .it .gain{color:var(--sky-2);text-align:right;white-space:nowrap}
+@media (max-width:760px){.day-plan{grid-template-columns:1fr;gap:2px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="page-head">
+    <span class="label">Lịch tuần</span>
+    <h1>Lên lịch cả tuần, né giờ bụi</h1>
+    <p>Bảng dưới cho biết lượng bụi mịn dự kiến trong từng giờ của 7 ngày tới. Thêm các hoạt động của bạn, trang sẽ tự xếp chúng vào khung giờ ít bụi nhất.</p>
+  </header>
+  <div class="toolbar"><span class="label">Thành phố</span><div id="seg"></div></div>
+
+  <section class="panel glass">
+    <span class="kicker">Bước 1 · Thêm hoạt động</span>
+    <div class="form">
+      <label class="f">Hoạt động<select id="aType">
+        <option value="run">Chạy bộ, tập thể dục</option>
+        <option value="kids">Cho trẻ chơi ngoài trời</option>
+        <option value="market">Đi chợ, việc vặt</option>
+        <option value="commute">Đi làm, đi học</option>
+        <option value="window">Mở cửa sổ thông gió</option>
+        <option value="other">Khác…</option></select></label>
+      <label class="f" id="nameWrap" hidden>Tên hoạt động<input type="text" id="aName" maxlength="40" placeholder="Ví dụ: Đi bơi"></label>
+      <label class="f">Kéo dài<select id="aLen"><option value="1">1 giờ</option><option value="2">2 giờ</option><option value="3">3 giờ</option><option value="4">4 giờ</option></select></label>
+      <label class="f">Sớm nhất từ<select id="aFrom"></select></label>
+      <label class="f">Muộn nhất đến<select id="aTo"></select></label>
+      <label class="f">Giờ bạn hay làm<select id="aUsual"></select></label>
+    </div>
+    <div class="label" style="margin-bottom:8px">Vào những ngày</div>
+    <div class="chips" id="aDays"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button class="btn primary" id="aAdd">Thêm vào lịch</button>
+    </div>
+    <div class="acts-list" id="actsList"></div>
+  </section>
+
+  <section class="panel glass">
+    <span class="kicker">Bước 2 · Bảng bụi 7 ngày tới</span>
+    <p class="small" id="gridNote">Đang tải dự báo…</p>
+    <div class="wk-scroll"><div class="wk" id="grid"></div></div>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <section class="panel glass">
+    <span class="kicker">Bước 3 · Lịch đề xuất của bạn</span>
+    <p class="tq-big" id="summary" style="font-size:1.4rem">Thêm một hoạt động ở Bước 1 để xem lịch.</p>
+    <div id="plan"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button class="btn primary" id="ics" disabled>Tải về lịch điện thoại (.ics)</button>
+      <button class="btn" id="clear" disabled>Xoá tất cả hoạt động</button>
+    </div>
+    <p class="small" style="margin:10px 0 0">Tệp .ics mở được bằng Google Calendar, lịch iPhone và Outlook. Danh sách hoạt động chỉ được lưu trên trình duyệt của bạn.</p>
+  </section>
+</main>
+<script src="assets/core.js?v=8"></script>
+<script src="assets/week.js?v=8"></script>
+</body>
+</html>

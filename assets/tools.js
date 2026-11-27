@@ -1,39 +1,38 @@
 /* Trang công cụ */
 renderShell("tools");
-let CITY = getCity(), fcChart;
+let CITY = getCity();
 
 function calcExposure() {
   if (!INS) return;
   const c = INS.cities[CITY], g = id => $(id).value, hrs = +g("hrs");
   $("hrsOut").textContent = vn(hrs);
-  const now = doseFor(c, {hrs, when: g("when"), mode: +g("mode"), mask: +g("mask"), indoor: +g("indoor")});
-  const best = doseFor(c, {hrs, when: "mid", mode: +g("mode"), mask: 0.25, indoor: 0.3});
-  $("cigNow").textContent = vn(cigYear(now), 0);
-  $("cigBest").textContent = vn(cigYear(best), 0);
-  $("cigSave").textContent = Math.max(0, Math.round(100 * (1 - best / now))) + "%";
-  // Mức chưa phòng hộ gì: cùng giờ và phương tiện, không khẩu trang, nhà mở cửa
-  const none = doseFor(c, {hrs, when: g("when"), mode: +g("mode"), mask: 1, indoor: 0.7});
-  const done = Math.round(100 * (1 - now / none));
-  $("cigDone").textContent = done > 0 ? `Bạn đã giảm được ${done}% nhờ khẩu trang hoặc máy lọc (từ ${vn(cigYear(none), 0)} điếu)` : "";
-}
+  const mine = {hrs, when: g("when"), mode: +g("mode"), mask: +g("mask"), indoor: +g("indoor")};
+  // Mốc so sánh: cùng số giờ và phương tiện, nhưng ra ngoài chiều tối, không khẩu trang, nhà mở cửa
+  const none = doseFor(c, {...mine, when: "eve", mask: 1, indoor: 0.7});
+  const now = doseFor(c, mine);
+  const best = doseFor(c, {...mine, when: "mid", mask: 0.25, indoor: 0.3});
+  const pct = x => Math.max(0, Math.round(100 * (1 - x / none)));
+  const saved = pct(now), max = pct(best);
 
-function renderPlan() {
-  const d = live[CITY], body = $("planBody");
-  if (!d) { body.innerHTML = `<tr><td colspan="4" class="err">Chưa tải được dự báo, hãy thử tải lại trang.</td></tr>`; return; }
-  const len = +$("act").value;
-  body.innerHTML = windows(d, len).map(w => `<tr><td>${fmtDay.format(new Date(w.day + "T12:00"))}</td>
-    <td class="t"><span class="sq" style="background:${pmColor(w.best.avg)}"></span> ${pad(w.best.start)}:00–${pad(w.best.start + len)}:00 <span class="small">~${Math.round(w.best.avg)} µg/m³</span></td>
-    <td><span class="sq" style="background:${pmColor(w.worst.avg)}"></span> ${pad(w.worst.start)}:00–${pad(w.worst.start + len)}:00 <span class="small">~${Math.round(w.worst.avg)}</span></td>
-    <td><b>−${Math.round(100 * (1 - w.best.avg / w.worst.avg))}%</b></td></tr>`).join("");
-  const fut = futureHours(d);
-  fcChart?.destroy();
-  fcChart = new Chart($("fcChart"), {
-    type: "bar",
-    data: {labels: fut.map(x => `${x.t.slice(8, 10)}/${x.t.slice(5, 7)} ${x.h}h`),
-      datasets: [{data: fut.map(x => x.v), backgroundColor: fut.map(x => pmColor(x.v)), borderRadius: 2, barPercentage: .9, categoryPercentage: 1}]},
-    options: {maintainAspectRatio: false, plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => `${vn(c.raw)} µg/m³`}}},
-      scales: {x: {ticks: {maxTicksLimit: 6, maxRotation: 0}, grid: {display: false}}, y: {beginAtZero: true}}},
-  });
+  $("cigNone").textContent = vn(cigYear(none), 0);
+  $("cigNow").textContent = vn(cigYear(now), 0);
+  $("cigSave").textContent = saved + "%";
+  $("saveNote").textContent = saved ? `tức khoảng ${vn(cigYear(none) - cigYear(now), 0)} điếu thuốc mỗi năm` : "chưa có biện pháp nào được chọn";
+  $("barNow").style.width = saved + "%";
+  $("barMax").style.width = max + "%";
+  $("maxNote").textContent = `Tối đa có thể tránh: ${max}%`;
+
+  // Gợi ý: mỗi việc còn chưa làm giúp tránh thêm bao nhiêu
+  const options = [
+    ["Ra ngoài vào giữa ngày (10–15h)", {when: "mid"}, mine.when === "mid"],
+    ["Đeo khẩu trang N95 đeo kín", {mask: 0.25}, mine.mask === 0.25],
+    ["Dùng máy lọc không khí trong nhà", {indoor: 0.3}, mine.indoor === 0.3],
+  ].filter(o => !o[2]).map(([t, ch]) => ({t, gain: pct(doseFor(c, {...mine, ...ch})) - saved}))
+   .filter(o => o.gain > 0).sort((a, b) => b.gain - a.gain);
+  $("tips").innerHTML = options.length
+    ? `<div class="label" style="margin-bottom:6px">Làm thêm để tránh nhiều hơn</div>` + options.map(o =>
+        `<div class="bar" style="grid-template-columns:minmax(0,260px) 1fr 60px"><span>${o.t}</span><span class="track"><span class="fill" style="width:${o.gain}%;background:var(--sky-2)"></span></span><span class="v">+${o.gain}%</span></div>`).join("")
+    : `<p class="small" style="color:var(--sky-2)">Bạn đang áp dụng tất cả biện pháp. Đây là mức bảo vệ tốt nhất.</p>`;
 }
 
 function renderCalendar() {
@@ -44,11 +43,8 @@ function renderCalendar() {
     <td><span class="mini" style="width:${m.qcvn_pct}px;background:var(--p3)"></span>${m.qcvn_pct}%</td></tr>`).join("");
 }
 
-function renderAll() {
-  calcExposure(); renderCalendar();
-  loadLive(CITY).then(renderPlan).catch(renderPlan);
-}
-
 ["hrs", "when", "mode", "mask", "indoor"].forEach(id => $(id).addEventListener("input", calcExposure));
-$("act").addEventListener("change", renderPlan);
-loadInsights().then(() => { citySeg($("seg"), k => { CITY = k; renderAll(); }); renderAll(); });
+loadInsights().then(() => {
+  citySeg($("seg"), k => { CITY = k; calcExposure(); renderCalendar(); });
+  calcExposure(); renderCalendar();
+});
