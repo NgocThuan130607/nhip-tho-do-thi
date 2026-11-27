@@ -8,7 +8,21 @@ Công cụ dữ liệu mở về bụi mịn PM2.5 ở Hà Nội và TP.HCM. Tra
 - Vì sao lại như vậy?
 - Người dân và chính quyền nên làm gì?
 
-## Các phần của trang
+## Các trang
+Giao diện tối kiểu bầu trời với các khối kính mờ, font Lexend. Màu xanh da trời là không khí sạch, màu xám là không khí ô nhiễm. Trên trang chủ, nền trời tự đục dần theo mức PM2.5 lúc đó.
+
+| Trang | Tệp |
+|---|---|
+| Bây giờ | `index.html` |
+| Bạn đã trải qua những gì? | `trai-qua.html` |
+| Phân tích dữ liệu | `phan-tich.html` |
+| Nên làm gì | `khuyen-nghi.html` |
+| Công cụ | `cong-cu.html` |
+| Lộ trình & phương pháp | `lo-trinh.html` |
+
+CSS và JS dùng chung nằm trong `assets/` (`style.css`, `core.js`). Mỗi trang có thêm một tệp JS riêng.
+
+## Nội dung
 1. **Bây giờ.** PM2.5 và AQI theo thời gian thực, quy ra số điếu thuốc trong ngày. Kèm 4 việc nên làm ngay: giờ ra ngoài đẹp nhất sắp tới, ở nhà, đi đường, xu hướng 6 giờ tới.
 2. **Bạn đã trải qua những gì?** Tính năng cá nhân hóa riêng của trang. Bạn nhập thành phố, ngày sinh nhật và năm bắt đầu sống ở đó, trang sẽ cho biết:
    - không khí trong ngày sinh nhật của bạn qua từng năm

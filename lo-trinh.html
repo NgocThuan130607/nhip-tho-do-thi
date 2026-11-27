@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lộ trình và phương pháp</title>
+<meta name="description" content="Hướng phát triển của Nhịp Thở Đô Thị, nguồn dữ liệu, cách xử lý và giới hạn.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%234cb8f5'/><path d='M7 13h12a3 3 0 1 0-3-3M7 19h15a3 3 0 1 1-3 3' stroke='white' stroke-width='2.2' fill='none' stroke-linecap='round'/></svg>">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="page-head">
+    <span class="label">Lộ trình & phương pháp</span>
+    <h1>Từ trang web đến một dịch vụ công</h1>
+    <p>Phiên bản hiện tại cho thấy chỉ với dữ liệu mở đã có thể đưa ra lời khuyên cụ thể. Các bước tiếp theo nhằm tăng độ chính xác và đưa thông tin đến đúng người, đúng lúc.</p>
+  </header>
+
+  <section class="panel glass">
+    <span class="kicker">Lộ trình phát triển</span>
+    <ul class="road">
+      <li><span class="tag">Ngắn hạn</span><b>Cảnh báo qua Zalo và thông báo đẩy</b>Mỗi sáng gửi "khung giờ vàng" trong ngày, và báo động sớm khi dự báo bước vào một đợt ô nhiễm nhiều ngày.</li>
+      <li><span class="tag">Ngắn hạn</span><b>Cài như app, song ngữ, thẻ chia sẻ</b>PWA dùng được khi mạng yếu, thêm tiếng Anh cho người nước ngoài, ảnh tóm tắt để chia sẻ lên mạng xã hội.</li>
+      <li><span class="tag">Trung hạn</span><b>Hiệu chỉnh bằng trạm đo thực tế</b>Ghép dữ liệu OpenAQ, trạm của Sở TN&amp;MT và cảm biến giá rẻ cộng đồng để ra bản đồ theo quận.</li>
+      <li><span class="tag">Trung hạn</span><b>Mô hình dự báo riêng</b>Gradient boosting dùng đặc trưng trễ, độ cao lớp biên và gió, công bố sai số so với CAMS một cách minh bạch.</li>
+      <li><span class="tag">Trung hạn</span><b>Chế độ trường học</b>Lịch ra chơi và giờ thể dục ngoài trời tự điều chỉnh theo dự báo, kèm thông báo cho phụ huynh.</li>
+      <li><span class="tag">Dài hạn</span><b>Lộ trình đi lại ít bụi</b>Gợi ý giờ và tuyến đường ít phơi nhiễm cho người đi xe máy, kết hợp dữ liệu giao thông.</li>
+      <li><span class="tag">Dài hạn</span><b>Báo cáo cộng đồng</b>Người dân báo điểm đốt rác, đốt rơm. Hệ thống đối chiếu với các đỉnh bụi để giúp cơ quan quản lý ưu tiên xử lý.</li>
+      <li><span class="tag">Dài hạn</span><b>API và widget mở</b>Cho báo điện tử, doanh nghiệp, tòa nhà nhúng chỉ số và khuyến nghị vào sản phẩm của họ.</li>
+    </ul>
+  </section>
+
+  <div class="cols" style="gap:20px">
+    <section class="panel glass" style="margin:0">
+      <span class="kicker">Dữ liệu</span>
+      <ul class="list">
+        <li>PM2.5, PM10, NO₂, CO theo giờ: <a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank" rel="noopener">Open-Meteo Air Quality API</a> (mô hình CAMS của Copernicus, độ phân giải khoảng 40 km).</li>
+        <li>Gió, hướng gió, mưa, độ cao lớp biên: tái phân tích ERA5 qua <a href="https://open-meteo.com/en/docs/historical-weather-api" target="_blank" rel="noopener">Open-Meteo Historical API</a>.</li>
+        <li>Ngưỡng trung bình 24 giờ: WHO 2021 (15 µg/m³), US EPA (35,4 µg/m³), QCVN 05:2023 (50 µg/m³).</li>
+      </ul>
+    </section>
+    <section class="panel glass" style="margin:0">
+      <span class="kicker">Cách xử lý</span>
+      <ul class="list">
+        <li>Script Python (<code>scripts/build_insights.py</code>) tải dữ liệu theo giờ và ghép không khí với thời tiết.</li>
+        <li id="qcNote">Kiểm soát chất lượng: loại các giờ PM2.5 dưới 2 µg/m³ (sự cố dữ liệu CAMS 13–15/12/2022), chỉ giữ ngày có từ 18 giờ dữ liệu trở lên.</li>
+        <li>Phần "Bây giờ" và dự báo được lấy trực tiếp trong trình duyệt, luôn là số liệu mới.</li>
+      </ul>
+    </section>
+    <section class="panel glass" style="margin:0">
+      <span class="kicker">Giới hạn</span>
+      <ul class="list">
+        <li>Đây là dữ liệu mô hình, không phải trạm đo. Mỗi thành phố chỉ có một điểm lưới nên không thấy khác biệt giữa các quận.</li>
+        <li>CAMS có thể lệch so với trạm thực tế. Hãy đọc các con số như xu hướng.</li>
+        <li>Quy đổi ra điếu thuốc và các hệ số phơi nhiễm chỉ là ước lượng để so sánh.</li>
+      </ul>
+      <p class="small" id="genNote"></p>
+    </section>
+  </div>
+</main>
+<script src="assets/core.js"></script>
+<script>
+renderShell("road");
+loadInsights().then(() => {
+  const s = INS.cities.hanoi.summary, s2 = INS.cities.hcmc.summary, [a, b] = INS.period;
+  $("qcNote").textContent = `Kiểm soát chất lượng: loại ${s.qc_removed_hours + s2.qc_removed_hours} giờ có PM2.5 dưới 2 µg/m³ (sự cố dữ liệu CAMS khoảng 13–15/12/2022), chỉ giữ ngày có từ 18 giờ dữ liệu trở lên. Tổng cộng ${vn(s.hours + s2.hours, 0)} giờ dữ liệu được phân tích.`;
+  $("genNote").textContent = `Dữ liệu lịch sử từ ${dmy(a)} đến ${dmy(b)}, phân tích ngày ${dmy(INS.generated)}.`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Công cụ bụi mịn</title>
+<meta name="description" content="Tính lượng bụi bạn hít mỗi năm, lên lịch hoạt động theo dự báo 5 ngày và xem lịch ra ngoài theo tháng.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%234cb8f5'/><path d='M7 13h12a3 3 0 1 0-3-3M7 19h15a3 3 0 1 1-3 3' stroke='white' stroke-width='2.2' fill='none' stroke-linecap='round'/></svg>">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="page-head">
+    <span class="label">Công cụ</span>
+    <h1>Tự tính cho chính mình</h1>
+    <p>Ba công cụ nhỏ giúp bạn biến dữ liệu thành quyết định hằng ngày.</p>
+  </header>
+  <div class="toolbar"><span class="label">Thành phố</span><div id="seg"></div></div>
+
+  <section class="panel glass">
+    <span class="kicker">Công cụ 01</span>
+    <h2>Mỗi năm bạn hít bao nhiêu bụi?</h2>
+    <p class="small">Quy đổi theo mốc 22 µg/m³ trong 24 giờ ≈ 1 điếu thuốc (Berkeley Earth).</p>
+    <div class="form">
+      <label class="f">Giờ ở ngoài trời mỗi ngày: <span id="hrsOut">2</span> giờ<input type="range" id="hrs" min="0" max="12" step="0.5" value="2"></label>
+      <label class="f">Thường ra ngoài lúc<select id="when"><option value="eve">Chiều tối (17–22h)</option><option value="morn">Sáng sớm (6–9h)</option><option value="mid">Giữa ngày (10–15h)</option><option value="any">Rải rác cả ngày</option></select></label>
+      <label class="f">Phương tiện<select id="mode"><option value="1.3">Xe máy</option><option value="1.1">Đi bộ, xe đạp</option><option value="0.6">Ô tô đóng kính</option></select></label>
+      <label class="f">Khẩu trang<select id="mask"><option value="1">Không đeo</option><option value="0.75">Khẩu trang vải, y tế</option><option value="0.25">N95 đeo kín</option></select></label>
+      <label class="f">Trong nhà<select id="indoor"><option value="0.7">Mở cửa bình thường</option><option value="0.3">Có máy lọc không khí</option></select></label>
+    </div>
+    <div class="result">
+      <div><span class="stat num" id="cigNow">–</span><div class="small">điếu thuốc mỗi năm, với thói quen hiện tại</div></div>
+      <div><span class="stat num" id="cigBest" style="color:var(--sky-2)">–</span><div class="small">nếu ra ngoài giữa ngày, đeo N95 và dùng máy lọc</div></div>
+      <div><span class="stat num" id="cigSave" style="color:var(--sky)">–</span><div class="small">lượng bụi có thể tránh được</div></div>
+    </div>
+    <p class="small" style="margin:14px 0 0">Giả định: xe máy phơi nhiễm gấp 1,3 lần không khí nền vì sát khí thải. Trong nhà có nồng độ bằng 70% ngoài trời, hoặc 30% nếu có máy lọc. N95 đeo kín lọc khoảng 75%. Đây là ước lượng để so sánh các lựa chọn, không phải chẩn đoán y khoa.</p>
+  </section>
+
+  <section class="panel glass">
+    <span class="kicker">Công cụ 02</span>
+    <h2>Lên lịch hoạt động theo dự báo 5 ngày</h2>
+    <div class="form" style="grid-template-columns:minmax(0,320px)">
+      <label class="f">Hoạt động<select id="act"><option value="1">Chạy bộ, tập thể dục (1 giờ)</option><option value="2">Cho trẻ chơi ngoài trời (2 giờ)</option><option value="1">Đi chợ, việc vặt (1 giờ)</option><option value="3">Mở cửa sổ thông gió (3 giờ)</option></select></label>
+    </div>
+    <div class="chart-box" style="height:220px"><canvas id="fcChart" aria-label="Dự báo PM2.5 theo giờ"></canvas></div>
+    <table class="plan"><thead><tr><th>Ngày</th><th>Nên làm lúc</th><th>Tránh lúc</th><th>Giảm phơi nhiễm</th></tr></thead><tbody id="planBody"><tr><td colspan="4" class="load">Đang tải dự báo…</td></tr></tbody></table>
+  </section>
+
+  <section class="panel glass">
+    <span class="kicker">Công cụ 03</span>
+    <h2>Lịch ra ngoài theo tháng</h2>
+    <p class="small">Khung 2 giờ sạch nhất và bẩn nhất trong khoảng 6h–22h, tính trung bình từ năm 2022. Hàng tô sáng là tháng hiện tại.</p>
+    <table class="plan"><thead><tr><th>Tháng</th><th>Nên ra ngoài</th><th>Nên tránh</th><th>Ngày vượt QCVN</th></tr></thead><tbody id="calBody"></tbody></table>
+  </section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="assets/core.js"></script>
+<script src="assets/tools.js"></script>
+</body>
+</html>

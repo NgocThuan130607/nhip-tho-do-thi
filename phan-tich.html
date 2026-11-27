@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phân tích dữ liệu bụi mịn</title>
+<meta name="description" content="Hơn 4 năm dữ liệu PM2.5 ở Hà Nội và TP.HCM: khi nào bụi nhiều nhất, vì sao buổi tối tệ nhất, gió, mưa, Tết và quán tính ô nhiễm.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%234cb8f5'/><path d='M7 13h12a3 3 0 1 0-3-3M7 19h15a3 3 0 1 1-3 3' stroke='white' stroke-width='2.2' fill='none' stroke-linecap='round'/></svg>">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="page-head">
+    <span class="label">Câu chuyện dữ liệu</span>
+    <h1>Hơn 4 năm bụi mịn</h1>
+    <p id="lede">Đang tải dữ liệu…</p>
+  </header>
+
+  <section class="panel glass">
+    <span class="kicker">Mỗi vạch là một ngày</span>
+    <div id="stripes"></div>
+  </section>
+
+  <div class="toolbar"><span class="label">Xem phân tích cho</span><div id="seg"></div></div>
+
+  <section class="panel glass">
+    <span class="kicker">Chương 01</span>
+    <h2>Khi nào bụi dày nhất?</h2>
+    <p class="prose" id="c1-text"></p>
+    <div class="heat" id="heat" aria-label="Heatmap PM2.5 theo tháng và giờ"></div>
+    <div class="legend" id="legend1"></div>
+    <p class="small" style="margin-top:8px">Mỗi ô là PM2.5 trung bình theo tháng (hàng) và giờ trong ngày (cột). Hàng có viền là tháng hiện tại.</p>
+  </section>
+
+  <section class="panel glass">
+    <span class="kicker">Chương 02</span>
+    <h2>Vì sao buổi tối luôn tệ nhất?</h2>
+    <p class="prose" id="c2-text"></p>
+    <div class="chart-box"><canvas id="eveChart" aria-label="PM2.5, NO2 và độ cao lớp biên theo giờ"></canvas></div>
+    <p class="small">Mùa khô (tháng 11 đến tháng 4), trung bình theo giờ. Vùng xanh là độ cao lớp biên khí quyển (trục phải, mét): lớp này càng mỏng thì bụi càng bị dồn nén gần mặt đất.</p>
+  </section>
+
+  <section class="panel glass">
+    <span class="kicker">Chương 03</span>
+    <h2>Gió, mưa, và một cái Tết không sạch như ta nghĩ</h2>
+    <p class="prose" id="c3-text"></p>
+    <div class="cols">
+      <div><h3>Tốc độ gió</h3><p class="small" style="margin:0">PM2.5 trung bình theo tốc độ gió</p><div class="bars" id="windBars"></div></div>
+      <div><h3>Hướng gió</h3><p class="small" style="margin:0">Theo hướng gió thổi đến. Số % là tỉ lệ thời gian.</p><div class="bars" id="dirBars"></div></div>
+      <div><h3>Mưa</h3><div class="bars" id="rainBars"></div>
+        <h3 style="margin-top:18px">Tuần Tết so với các tuần xung quanh</h3><div class="bars" id="tetBars"></div></div>
+    </div>
+  </section>
+
+  <section class="panel glass">
+    <span class="kicker">Chương 04</span>
+    <h2>Một ngày xấu thường kéo theo ngày xấu</h2>
+    <p class="prose" id="c4-text"></p>
+    <div class="cols">
+      <div><span class="stat num" id="persistStat"></span><p class="small">khả năng ngày mai vẫn vượt chuẩn QCVN nếu hôm nay đã vượt</p></div>
+      <div><h3>Số đợt ô nhiễm (≥ 3 ngày liền trên 50 µg/m³) theo tháng bắt đầu</h3><div class="bars" id="epBars"></div></div>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="assets/core.js"></script>
+<script src="assets/story.js"></script>
+</body>
+</html>
