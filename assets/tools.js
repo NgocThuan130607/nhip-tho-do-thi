@@ -11,6 +11,10 @@ function calcExposure() {
   $("cigNow").textContent = vn(cigYear(now), 0);
   $("cigBest").textContent = vn(cigYear(best), 0);
   $("cigSave").textContent = Math.max(0, Math.round(100 * (1 - best / now))) + "%";
+  // Mức chưa phòng hộ gì: cùng giờ và phương tiện, không khẩu trang, nhà mở cửa
+  const none = doseFor(c, {hrs, when: g("when"), mode: +g("mode"), mask: 1, indoor: 0.7});
+  const done = Math.round(100 * (1 - now / none));
+  $("cigDone").textContent = done > 0 ? `Bạn đã giảm được ${done}% nhờ khẩu trang hoặc máy lọc (từ ${vn(cigYear(none), 0)} điếu)` : "";
 }
 
 function renderPlan() {
