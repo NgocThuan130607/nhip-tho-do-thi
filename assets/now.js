@@ -105,4 +105,4 @@ $("other").addEventListener("click", () => switchCity($("other").dataset.city));
 $("explore").innerHTML = PAGES.filter(p => p.key !== "now").map(p =>
   `<a class="ex glass${["me", "week"].includes(p.key) ? " feature" : ""}" href="${p.href}">${icon(p.key)}<h3>${p.label}</h3><p>${p.desc}</p><span class="go">Xem trang →</span></a>`).join("");
 
-Promise.allSettled(Object.keys(CITIES).map(loadLive)).then(() => renderCity(getCity()));
+Promise.allSettled(Object.keys(CITIES).map(k => loadLive(k))).then(() => renderCity(getCity()));
