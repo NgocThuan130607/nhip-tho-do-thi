@@ -4,206 +4,386 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nhịp Thở Đô Thị</title>
-<meta name="description" content="Theo dõi, dự báo và phân tích bụi mịn PM2.5 ở Hà Nội và TP.HCM: hôm nay thở thế nào, khung giờ nào nên ra ngoài, và 4 năm dữ liệu nói gì.">
+<meta name="description" content="Bụi mịn PM2.5 ở Hà Nội và TP.HCM: bây giờ nên làm gì, hơn 4 năm dữ liệu nói gì, và người dân, chính quyền có thể làm gì.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%230b63b0'/><path d='M7 13h13a3 3 0 1 0-3-3M7 19h17a3 3 0 1 1-3 3' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%231d1b16'/><g fill='%23c4542b'><rect x='5' y='8' width='3' height='16'/><rect x='10' y='12' width='3' height='12'/><rect x='15' y='5' width='3' height='19'/><rect x='20' y='14' width='3' height='10'/><rect x='25' y='10' width='3' height='14'/></g></svg>">
 <style>
 :root{
-  --bg:#f4f8fc; --surface:#ffffff; --surface-2:#eaf2fa; --ink:#10263d; --ink-2:#4a5f75; --line:#d6e3ef;
-  --brand:#0b63b0; --brand-2:#4f9a5e; --accent:#e8f1fb;
-  --good:#3a9d5d; --moderate:#d9a404; --usg:#e8771c; --bad:#d63a3a; --vbad:#8b3fa8; --haz:#7a1f2b;
-  --shadow:0 1px 2px rgba(16,38,61,.06),0 6px 24px rgba(16,38,61,.06);
+  --paper:#f5f2ea; --paper-2:#ece7da; --ink:#1d1b16; --ink-2:#5d584d; --ink-3:#8a8475; --rule:#d6cfbf;
+  --accent:#b8481f;
+  --p0:#8fbf98; --p1:#cfcf8f; --p2:#e6b65f; --p3:#d88042; --p4:#b2432c; --p5:#6b2638;
+  --serif:"Newsreader",Georgia,serif; --sans:"Be Vietnam Pro",system-ui,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0c1622; --surface:#13212f; --surface-2:#182a3b; --ink:#e6eef6; --ink-2:#9db0c3; --line:#24384c;
-  --brand:#5aa8ee; --brand-2:#79c08a; --accent:#16314a; --shadow:none;
+  --paper:#15140f; --paper-2:#1f1d17; --ink:#ece6d8; --ink-2:#b3ac9c; --ink-3:#7f796c; --rule:#3a362c; --accent:#e0794d;
 }}
-:root[data-theme="dark"]{
-  --bg:#0c1622; --surface:#13212f; --surface-2:#182a3b; --ink:#e6eef6; --ink-2:#9db0c3; --line:#24384c;
-  --brand:#5aa8ee; --brand-2:#79c08a; --accent:#16314a; --shadow:none;
-}
+:root[data-theme="dark"]{--paper:#15140f; --paper-2:#1f1d17; --ink:#ece6d8; --ink-2:#b3ac9c; --ink-3:#7f796c; --rule:#3a362c; --accent:#e0794d}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Be Vietnam Pro",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:var(--brand)}
-.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
-header.hero{background:linear-gradient(160deg,#0b63b0 0%,#0f7fc4 55%,#4f9a5e 130%);color:#fff;padding:56px 0 72px;position:relative;overflow:hidden}
-.hero h1{font-size:clamp(2.2rem,6vw,3.8rem);line-height:1.05;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
-.hero p.lead{max-width:640px;font-size:1.1rem;opacity:.92;margin:0 0 24px}
-.hero .kicker{display:inline-block;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.16);padding:4px 12px;border-radius:99px;margin-bottom:18px}
-.hero nav{display:flex;flex-wrap:wrap;gap:8px}
-.hero nav a{color:#fff;text-decoration:none;font-weight:600;font-size:.92rem;padding:8px 14px;border:1px solid rgba(255,255,255,.35);border-radius:99px}
-.hero nav a:hover{background:rgba(255,255,255,.14)}
-.hero svg.waves{position:absolute;right:-40px;bottom:-10px;width:520px;max-width:70%;opacity:.18}
-main section{padding:56px 0 8px}
-h2{font-size:clamp(1.5rem,3.5vw,2rem);margin:0 0 6px;letter-spacing:-.01em;color:var(--brand)}
-.sub{color:var(--ink-2);margin:0 0 24px;max-width:720px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
-.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px}
-.now-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.now-city{font-weight:700;font-size:1.2rem}
-.now-time{color:var(--ink-2);font-size:.85rem}
-.badge{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.85rem;padding:5px 12px;border-radius:99px;color:#fff;white-space:nowrap}
-.now-val{display:flex;align-items:baseline;gap:10px;margin:14px 0 4px}
-.now-val b{font-size:3.2rem;line-height:1;font-weight:800;font-variant-numeric:tabular-nums}
-.now-val span{color:var(--ink-2)}
-.meter{height:8px;border-radius:99px;background:linear-gradient(90deg,var(--good) 0 16%,var(--moderate) 16% 33%,var(--usg) 33% 50%,var(--bad) 50% 66%,var(--vbad) 66% 83%,var(--haz) 83%);position:relative;margin:14px 0 18px}
-.meter i{position:absolute;top:-5px;width:4px;height:18px;border-radius:2px;background:var(--ink);transform:translateX(-2px);transition:left .6s}
-.advice{list-style:none;padding:0;margin:0;display:grid;gap:8px}
-.advice li{display:grid;grid-template-columns:28px 1fr;gap:8px;font-size:.93rem;background:var(--surface-2);padding:10px 12px;border-radius:10px}
-.advice li .ic{font-size:1.1rem;line-height:1.4}
-.advice li b{display:block;font-size:.8rem;color:var(--ink-2);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
-.tabs{display:inline-flex;background:var(--surface-2);border-radius:99px;padding:4px;gap:4px;margin-bottom:16px}
-.tabs button{border:0;background:transparent;color:var(--ink-2);font:600 .92rem "Be Vietnam Pro",sans-serif;padding:8px 18px;border-radius:99px;cursor:pointer}
-.tabs button[aria-pressed="true"]{background:var(--surface);color:var(--brand);box-shadow:var(--shadow)}
-.chart-box{position:relative;height:300px}
-.windows{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:12px;margin-top:16px}
-.win{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface)}
-.win .d{font-size:.82rem;color:var(--ink-2);font-weight:600;text-transform:capitalize}
-.win .t{font-size:1.35rem;font-weight:800;margin:2px 0;font-variant-numeric:tabular-nums}
-.win .v{font-size:.85rem;display:flex;align-items:center;gap:6px}
-.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
-.kpi .n{font-size:2rem;font-weight:800;line-height:1.1;color:var(--brand);font-variant-numeric:tabular-nums}
-.kpi .l{color:var(--ink-2);font-size:.9rem}
-.kpi .c{font-size:.78rem;color:var(--ink-2);margin-top:6px}
-.heat{display:grid;grid-template-columns:44px repeat(24,1fr);gap:2px;font-size:.7rem;color:var(--ink-2)}
-.heat div{aspect-ratio:1/1;border-radius:3px;min-width:0}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration-color:var(--accent);text-underline-offset:3px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+.prose{max-width:680px}
+.small{font-size:.82rem;color:var(--ink-2)}
+.caps{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--ink-2)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;margin:0}
+.num{font-family:var(--serif);font-variant-numeric:lining-nums tabular-nums}
+
+/* Masthead */
+.mast{border-bottom:3px double var(--ink);padding:14px 0 18px}
+.mast-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:18px}
+.mast h1{font-size:clamp(2.6rem,8vw,5.4rem);line-height:.95;font-weight:700;letter-spacing:-.03em}
+.mast h1 em{font-style:italic;font-weight:500;color:var(--accent)}
+.mast-row{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.mast p{margin:10px 0 0;max-width:520px;color:var(--ink-2);font-family:var(--serif);font-size:1.15rem;line-height:1.45}
+.toc{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:.88rem;font-weight:500}
+.toc a{text-decoration:none;border-bottom:1px solid transparent}
+.toc a:hover{border-color:var(--accent)}
+
+/* Now panel */
+.now{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--ink)}
+.now>div{padding:24px 0 26px}
+.now>div:first-child{padding-right:28px;border-right:1px solid var(--rule)}
+.now>div:last-child{padding-left:28px}
+.now .big{display:flex;align-items:baseline;gap:10px;margin:6px 0 2px}
+.now .big b{font-family:var(--serif);font-size:4.4rem;line-height:1;font-weight:600}
+.now .lvl{font-weight:700;display:inline-flex;align-items:center;gap:7px}
+.sq{width:11px;height:11px;display:inline-block;flex:none}
+.actions{list-style:none;margin:14px 0 0;padding:0;border-top:1px solid var(--rule)}
+.actions li{display:grid;grid-template-columns:92px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--rule);font-size:.93rem}
+.actions li span:first-child{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-3);padding-top:3px}
+
+/* Sections */
+section{padding:64px 0 0}
+.chap{display:grid;grid-template-columns:180px 1fr;gap:32px;border-top:1px solid var(--ink);padding-top:14px}
+.chap-label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--accent)}
+.chap-label b{display:block;font-family:var(--serif);font-size:2.4rem;letter-spacing:0;color:var(--ink);font-weight:500;line-height:1.1;margin-top:4px}
+.chap h2{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.12;margin-bottom:14px}
+.chap p{margin:0 0 14px}
+.lede{font-family:var(--serif);font-size:clamp(1.3rem,2.6vw,1.65rem);line-height:1.4;max-width:860px;margin:0 0 28px}
+.lede b{font-weight:600;color:var(--accent)}
+
+.citybar{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--rule);margin-top:56px}
+.citybar .wrap{display:flex;align-items:center;gap:14px;padding-top:10px;padding-bottom:10px}
+.seg{display:inline-flex;gap:18px}
+.seg button{border:0;background:none;padding:2px 0;font:600 .95rem var(--sans);color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent}
+.seg button[aria-pressed="true"]{color:var(--ink);border-color:var(--accent)}
+
+/* Stripes */
+.stripes{margin:6px 0 26px}
+.stripe-row{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center;margin-bottom:8px}
+.stripe-row svg{width:100%;height:58px;display:block}
+.stripe-axis{display:grid;grid-template-columns:110px 1fr;gap:12px}
+.stripe-axis div{position:relative;height:18px;font-size:.72rem;color:var(--ink-3)}
+.stripe-axis div span{position:absolute;transform:translateX(-50%)}
+.stripe-note{position:relative;height:0}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.78rem;color:var(--ink-2);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+
+/* Heatmap */
+.heat{display:grid;grid-template-columns:34px repeat(24,1fr);gap:1px;font-size:.68rem;color:var(--ink-3)}
+.heat div{aspect-ratio:1.25/1;min-width:0}
 .heat .lab{aspect-ratio:auto;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
 .heat .hl{aspect-ratio:auto;text-align:center}
-.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:.8rem;color:var(--ink-2)}
-.legend span{display:inline-flex;align-items:center;gap:5px}
-.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
-.findings{counter-reset:f;list-style:none;padding:0;margin:0;display:grid;gap:12px}
-.findings li{counter-increment:f;position:relative;padding:16px 16px 16px 60px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
-.findings li::before{content:counter(f);position:absolute;left:16px;top:14px;width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;font-weight:800;display:grid;place-items:center}
-.rain{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
-.rain div{flex:1;min-width:130px;background:var(--surface-2);border-radius:12px;padding:12px}
-.rain b{font-size:1.5rem;display:block}
-.method p,.method li{color:var(--ink-2);font-size:.95rem}
-.method h3{margin:0 0 8px;font-size:1.05rem}
-footer{padding:40px 0;color:var(--ink-2);font-size:.85rem;text-align:center}
-.muted{color:var(--ink-2);font-size:.85rem}
-.skeleton{color:var(--ink-2);font-style:italic}
-.err{color:var(--bad)}
-@media (max-width:640px){
-  .heat{grid-template-columns:30px repeat(24,1fr);gap:1px;font-size:.6rem}
-  .heat .hl:nth-child(even){visibility:hidden}
-  .chart-box{height:240px}
-  .now-val b{font-size:2.6rem}
+.heat .now-m{outline:2px solid var(--ink);outline-offset:-1px}
+
+/* Bars */
+.bars{display:grid;gap:6px;margin:8px 0 4px}
+.bar{display:grid;grid-template-columns:120px 1fr 52px;gap:10px;align-items:center;font-size:.86rem}
+.bar .track{height:14px;background:var(--paper-2);position:relative}
+.bar .fill{position:absolute;inset:0 auto 0 0}
+.bar .v{font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:28px 36px;margin-top:8px}
+.cols h3{font-size:1.15rem;margin-bottom:2px}
+.stat{font-family:var(--serif);font-size:2.6rem;line-height:1;font-weight:600}
+.chart-box{position:relative;height:300px;margin:6px 0 8px}
+.pull{font-family:var(--serif);font-size:1.25rem;line-height:1.4;border-left:3px solid var(--accent);padding-left:16px;margin:18px 0}
+
+/* Recommendations */
+.recs{display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+.recs h3{font-size:1.3rem;border-bottom:1px solid var(--ink);padding-bottom:6px;margin-bottom:4px}
+.rec{display:grid;grid-template-columns:42px 1fr;gap:6px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.rec .n{font-family:var(--serif);font-size:1.6rem;color:var(--accent);line-height:1}
+.rec h4{margin:0 0 4px;font-size:1rem}
+.rec p{margin:0;font-size:.93rem}
+.rec .why{display:block;margin-top:6px;font-size:.78rem;color:var(--ink-3)}
+
+/* Tools */
+.tool{border:1px solid var(--ink);padding:20px;background:var(--paper)}
+.tool h3{font-size:1.35rem;margin-bottom:4px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px;margin:14px 0}
+label.f{display:grid;gap:4px;font-size:.78rem;font-weight:600;color:var(--ink-2)}
+select,input[type=range]{font:500 .95rem var(--sans);color:var(--ink);background:var(--paper);border:1px solid var(--rule);padding:7px 8px;width:100%}
+input[type=range]{padding:0;border:0;accent-color:var(--accent)}
+.result{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:16px;border-top:1px solid var(--rule);padding-top:14px}
+.result .stat{font-size:2.4rem}
+.plan{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:8px}
+.plan th,.plan td{text-align:left;padding:8px 8px 8px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.plan th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.plan tr.cur td{background:var(--paper-2)}
+.plan td.t{font-family:var(--serif);font-size:1.05rem;font-weight:600;white-space:nowrap}
+.mini{display:inline-block;height:8px;vertical-align:middle;margin-right:6px}
+
+/* Roadmap */
+.road{list-style:none;margin:0;padding:0;columns:2 300px;column-gap:40px}
+.road li{break-inside:avoid;padding:12px 0;border-bottom:1px solid var(--rule)}
+.road b{display:block}
+.road .tag{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700}
+footer{margin-top:72px;border-top:3px double var(--ink);padding:18px 0 40px}
+footer .cols{font-size:.85rem;color:var(--ink-2)}
+footer h3{font-size:1rem;color:var(--ink)}
+footer ul{padding-left:18px;margin:6px 0}
+.err{color:var(--p4)}
+.load{color:var(--ink-3);font-style:italic}
+
+@media (max-width:760px){
+  .now{grid-template-columns:1fr}
+  .now>div:first-child{padding-right:0;border-right:0;border-bottom:1px solid var(--rule)}
+  .now>div:last-child{padding-left:0}
+  .chap{grid-template-columns:1fr;gap:6px}
+  .chap-label b{display:inline;font-size:1rem;margin-left:6px}
+  .recs{grid-template-columns:1fr}
+  .stripe-row,.stripe-axis{grid-template-columns:64px 1fr}
+  .heat{grid-template-columns:26px repeat(24,1fr);font-size:.58rem}
+  .heat .hl:nth-child(odd){visibility:hidden}
+  .now .big b{font-size:3.6rem}
+  .actions li{grid-template-columns:78px 1fr}
+  .chart-box{height:250px}
+  .bar{grid-template-columns:100px 1fr 44px}
+  .tq-big{font-size:1.35rem}
 }
+
+/* Bạn đã trải qua những gì? */
+#trai-qua .chap{border-top:3px solid var(--accent)}
+.otd{font-size:.92rem;color:var(--ink-2);margin:0 0 18px;padding:10px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.otd b{color:var(--ink)}
+.btn{font:600 .95rem var(--sans);background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:10px 18px;cursor:pointer;white-space:nowrap}
+.btn.ghost{background:none;color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.tq-big{font-family:var(--serif);font-size:clamp(1.35rem,2.8vw,1.9rem);line-height:1.35;margin:22px 0 18px;max-width:820px}
+.tq-big b{color:var(--accent);font-weight:600}
+.bday{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;margin:8px 0 22px}
+.bday div{border-top:6px solid;padding-top:8px;font-size:.85rem;color:var(--ink-2)}
+.bday b{display:block;font-family:var(--serif);font-size:1.6rem;color:var(--ink);line-height:1.1}
+.mystripe svg{width:100%;height:56px;display:block}
+.pledge{margin:6px 0 16px}
+.pledge label{display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--rule);cursor:pointer;font-size:.93rem}
+.pledge input{accent-color:var(--accent)}
+.pledge .gain{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.share{display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:24px;align-items:start;margin-top:18px}
+#card{width:100%;border:1px solid var(--rule);display:block;background:#f5f2ea}
+@media (max-width:760px){.share{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header class="hero">
-  <div class="wrap">
-    <span class="kicker">Dữ liệu mở · Hà Nội &amp; TP.HCM</span>
-    <h1>Nhịp Thở<br>Đô Thị</h1>
-    <p class="lead">Bụi mịn PM2.5 hôm nay ra sao, khung giờ nào nên ra ngoài, và hơn 4 năm dữ liệu cho thấy điều gì về không khí của hai thành phố lớn nhất Việt Nam.</p>
-    <nav>
-      <a href="#now">Hôm nay</a><a href="#forecast">Khung giờ vàng</a><a href="#history">Dữ liệu 4 năm</a><a href="#method">Phương pháp</a>
+
+<header class="wrap mast">
+  <div class="mast-top caps">
+    <span id="today">Hà Nội &amp; TP. Hồ Chí Minh</span>
+    <span>Dữ liệu mở · cập nhật mỗi giờ</span>
+  </div>
+  <div class="mast-row">
+    <div>
+      <h1>Nhịp Thở <em>Đô Thị</em></h1>
+      <p>Không khí hai thành phố lớn nhất Việt Nam đang ra sao, vì sao lại như vậy, và mỗi người có thể làm gì.</p>
+    </div>
+    <nav class="toc" aria-label="Mục lục">
+      <a href="#now">Bây giờ</a><a href="#trai-qua">Bạn đã trải qua những gì?</a><a href="#story">Câu chuyện dữ liệu</a><a href="#recs">Nên làm gì</a><a href="#tools">Công cụ</a><a href="#roadmap">Lộ trình</a>
     </nav>
   </div>
-  <svg class="waves" viewBox="0 0 200 120" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" aria-hidden="true">
-    <path d="M10 40h110a20 20 0 1 0-20-20"/><path d="M10 70h150a20 20 0 1 1-20 20"/><path d="M30 100h70"/>
-  </svg>
 </header>
 
-<main class="wrap">
-  <section id="now">
-    <h2>Hôm nay thở thế nào?</h2>
-    <p class="sub">Nồng độ PM2.5 và chỉ số AQI (thang US EPA) đang hiển thị là số liệu mới nhất. Lời khuyên được chia theo từng nhóm người.</p>
-    <div class="grid2" id="nowCards">
-      <div class="card skeleton">Đang tải dữ liệu Hà Nội…</div>
-      <div class="card skeleton">Đang tải dữ liệu TP.HCM…</div>
+<div class="wrap">
+  <div class="now" id="now">
+    <div id="now-hanoi"><span class="load">Đang tải số liệu Hà Nội…</span></div>
+    <div id="now-hcmc"><span class="load">Đang tải số liệu TP.HCM…</span></div>
+  </div>
+</div>
+
+<main>
+  <section class="wrap" id="trai-qua" style="padding-top:48px">
+    <div class="chap">
+      <div class="chap-label">Của riêng bạn<b>✦</b></div>
+      <div>
+        <h2>Bạn đã trải qua những gì?</h2>
+        <p class="otd" id="otd">Đang tải…</p>
+        <div class="prose"><p>Các trang đo không khí cho bạn biết hôm nay ra sao. Phần này cho bạn biết hơn 1.500 ngày qua, không khí ấy đã đi qua phổi <i>bạn</i> như thế nào: từ ngày sinh nhật, ngày tệ nhất, cho đến tổng lượng bụi bạn đã hít.</p></div>
+        <div class="form" style="align-items:end">
+          <label class="f">Bạn sống ở<select id="tqCity"><option value="hanoi">Hà Nội</option><option value="hcmc">TP. Hồ Chí Minh</option></select></label>
+          <label class="f">Ngày sinh nhật<select id="tqDay"></select></label>
+          <label class="f">Tháng sinh nhật<select id="tqMonth"></select></label>
+          <label class="f">Sống ở đây từ năm<select id="tqYear"></select></label>
+          <button class="btn" id="tqGo">Xem câu chuyện của tôi</button>
+        </div>
+        <p class="small" style="margin:0">Mọi thông tin bạn nhập chỉ được xử lý ngay trên máy bạn, không gửi đi đâu.</p>
+        <div id="tqResult" hidden>
+          <p class="tq-big" id="tqLede"></p>
+          <h3 style="font-size:1.15rem">Không khí trong ngày sinh nhật của bạn</h3>
+          <div class="bday" id="tqBday"></div>
+          <h3 style="font-size:1.15rem">Từng ngày bạn đã thở ở đây</h3>
+          <p class="small" style="margin:0 0 6px">Mỗi vạch là một ngày, tô màu theo PM2.5. Vạch đen phía trên đánh dấu ngày sinh nhật của bạn.</p>
+          <div class="mystripe" id="tqStripe"></div>
+          <div class="cols" style="margin-top:22px" id="tqExtremes"></div>
+          <h3 style="font-size:1.15rem;margin-top:28px">Từ hôm nay, tôi cam kết…</h3>
+          <p class="small" style="margin:0">Chọn một việc. Con số bên phải là lượng bụi bạn tránh được mỗi năm, so với thói quen phổ biến (2 giờ mỗi ngày đi xe máy vào chiều tối, không đeo khẩu trang).</p>
+          <div class="pledge" id="tqPledge"></div>
+          <div class="share">
+            <canvas id="card" width="1080" height="1350" aria-label="Thẻ chia sẻ câu chuyện của bạn"></canvas>
+            <div>
+              <p style="margin-top:0">Thẻ này tóm tắt câu chuyện của bạn. Chia sẻ để bạn bè cũng thử, vì mỗi người hiểu rõ hơn về không khí mình thở là thêm một người thay đổi thói quen.</p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button class="btn" id="tqDownload">Tải ảnh</button>
+                <button class="btn ghost" id="tqShare" hidden>Chia sẻ</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section id="forecast">
-    <h2>Khung giờ vàng để ra ngoài</h2>
-    <p class="sub">Dự báo PM2.5 theo giờ cho 5 ngày tới. Mỗi ngày, trang tìm ra 2 giờ liền có không khí sạch nhất trong khung 6h–21h. Đó là lúc hợp lý để chạy bộ, đi xe máy hay mở cửa sổ cho thoáng nhà.</p>
-    <div class="tabs" role="group" aria-label="Chọn thành phố" data-tabs="forecast">
-      <button aria-pressed="true" data-city="hanoi">Hà Nội</button><button aria-pressed="false" data-city="hcmc">TP.HCM</button>
+  <section class="wrap" id="story" style="padding-top:56px">
+    <p class="caps" style="margin:0 0 10px">Câu chuyện dữ liệu</p>
+    <p class="lede" id="lede">Đang tải dữ liệu…</p>
+    <div class="stripes" id="stripes"></div>
+  </section>
+
+  <div class="citybar">
+    <div class="wrap">
+      <span class="caps">Xem phân tích cho</span>
+      <div class="seg" role="group" aria-label="Chọn thành phố">
+        <button aria-pressed="true" data-city="hanoi">Hà Nội</button><button aria-pressed="false" data-city="hcmc">TP.HCM</button>
+      </div>
     </div>
-    <div class="card">
-      <div class="chart-box"><canvas id="fcChart" aria-label="Biểu đồ dự báo PM2.5 theo giờ"></canvas></div>
-      <div class="windows" id="windows"></div>
+  </div>
+
+  <section class="wrap">
+    <div class="chap">
+      <div class="chap-label">Chương<b>01</b></div>
+      <div>
+        <h2>Khi nào bụi dày nhất?</h2>
+        <div class="prose"><p id="c1-text"></p></div>
+        <div class="heat" id="heat" aria-label="Heatmap PM2.5 theo tháng và giờ"></div>
+        <div class="legend" id="legend1"></div>
+        <p class="small" style="margin-top:8px">Mỗi ô là PM2.5 trung bình (µg/m³) theo tháng (hàng) và giờ trong ngày (cột). Ô có viền đậm là tháng hiện tại.</p>
+      </div>
     </div>
   </section>
 
-  <section id="history">
-    <h2>Hơn 4 năm bụi mịn qua dữ liệu</h2>
-    <p class="sub" id="periodNote">Phân tích dữ liệu PM2.5 theo giờ, ghép với dữ liệu thời tiết.</p>
-    <div class="tabs" role="group" aria-label="Chọn thành phố" data-tabs="history">
-      <button aria-pressed="true" data-city="hanoi">Hà Nội</button><button aria-pressed="false" data-city="hcmc">TP.HCM</button>
-    </div>
-    <div class="grid4" id="kpis"></div>
-
-    <div class="card" style="margin-top:16px">
-      <h3 style="margin:0 0 4px">Bụi mịn theo ngày (trung bình trượt 7 ngày)</h3>
-      <p class="muted" style="margin:0 0 12px">So sánh hai thành phố. Đường nét đứt là ngưỡng 24h của WHO (15 µg/m³).</p>
-      <div class="chart-box"><canvas id="dailyChart"></canvas></div>
-    </div>
-
-    <div class="card" style="margin-top:16px">
-      <h3 style="margin:0 0 4px">Bụi tập trung vào lúc nào? <span class="muted" id="heatCity"></span></h3>
-      <p class="muted" style="margin:0 0 12px">Mỗi ô là PM2.5 trung bình theo tháng (hàng) và giờ trong ngày (cột).</p>
-      <div class="heat" id="heat"></div>
-      <div class="legend" id="heatLegend"></div>
-    </div>
-
-    <div class="grid2" style="margin-top:16px">
-      <div class="card">
-        <h3 style="margin:0 0 4px">Gió thổi bay bụi</h3>
-        <p class="muted" style="margin:0 0 12px">PM2.5 trung bình theo tốc độ gió (km/h)</p>
-        <div class="chart-box" style="height:240px"><canvas id="windChart"></canvas></div>
-      </div>
-      <div class="card">
-        <h3 style="margin:0 0 4px">Mưa rửa không khí</h3>
-        <p class="muted" style="margin:0 0 12px">PM2.5 trung bình ngày có mưa (≥ 1 mm) và ngày khô</p>
-        <div class="rain" id="rain"></div>
-        <h3 style="margin:20px 0 4px">Theo năm</h3>
-        <div class="chart-box" style="height:150px"><canvas id="yearChart"></canvas></div>
+  <section class="wrap">
+    <div class="chap">
+      <div class="chap-label">Chương<b>02</b></div>
+      <div>
+        <h2>Vì sao buổi tối luôn tệ nhất?</h2>
+        <div class="prose"><p id="c2-text"></p></div>
+        <div class="chart-box"><canvas id="eveChart" aria-label="PM2.5, NO2 và độ cao lớp biên theo giờ"></canvas></div>
+        <p class="small">Mùa khô (tháng 11 đến tháng 4), trung bình theo giờ. Vùng tô nhạt là độ cao lớp biên khí quyển (trục phải, mét). Lớp này càng mỏng thì bụi càng bị dồn nén gần mặt đất.</p>
       </div>
     </div>
-
-    <h3 style="margin:32px 0 12px;font-size:1.3rem">Những phát hiện chính</h3>
-    <ol class="findings" id="findings"></ol>
   </section>
 
-  <section id="method" class="method">
-    <h2>Phương pháp &amp; giới hạn</h2>
-    <div class="grid2" style="margin-top:16px">
-      <div class="card">
-        <h3>Dữ liệu</h3>
-        <ul>
-          <li><b>PM2.5, PM10 và US AQI</b> lấy theo giờ từ <a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank" rel="noopener">Open-Meteo Air Quality API</a>, nguồn mô hình CAMS (Copernicus) với độ phân giải khoảng 40 km.</li>
-          <li><b>Thời tiết lịch sử</b> (gió, mưa, độ ẩm, nhiệt độ) lấy từ tái phân tích ERA5 qua <a href="https://open-meteo.com/en/docs/historical-weather-api" target="_blank" rel="noopener">Open-Meteo Historical API</a>.</li>
-          <li><b>Ngưỡng tham chiếu:</b> WHO 2021 (24h: 15 µg/m³, năm: 5 µg/m³) và QCVN 05:2023/BTNMT (24h: 50 µg/m³).</li>
-        </ul>
+  <section class="wrap">
+    <div class="chap">
+      <div class="chap-label">Chương<b>03</b></div>
+      <div>
+        <h2>Gió, mưa, và một cái Tết không sạch như ta nghĩ</h2>
+        <div class="prose"><p id="c3-text"></p></div>
+        <div class="cols">
+          <div><h3>Tốc độ gió</h3><p class="small" style="margin:0">PM2.5 trung bình theo tốc độ gió (km/h)</p><div class="bars" id="windBars"></div></div>
+          <div><h3>Hướng gió</h3><p class="small" style="margin:0">PM2.5 trung bình theo hướng gió thổi đến. Số % cạnh tên hướng là tỉ lệ thời gian có gió hướng đó.</p><div class="bars" id="dirBars"></div></div>
+          <div><h3>Mưa</h3><div class="bars" id="rainBars"></div>
+            <h3 style="margin-top:18px">Tuần Tết so với các tuần xung quanh</h3><div class="bars" id="tetBars"></div></div>
+        </div>
       </div>
-      <div class="card">
-        <h3>Cách xử lý</h3>
-        <ul>
-          <li>Script Python (<code>scripts/build_insights.py</code>) tải hơn 37.000 giờ dữ liệu cho mỗi thành phố, ghép dữ liệu không khí với thời tiết theo giờ, chỉ giữ những ngày có từ 18 giờ dữ liệu trở lên, rồi tổng hợp theo ngày, tháng, giờ, nhóm tốc độ gió và trạng thái mưa.</li>
-          <li>Phần "Hôm nay" và "Khung giờ vàng" lấy dự báo trực tiếp ngay trong trình duyệt, nên số liệu luôn mới.</li>
-        </ul>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="chap">
+      <div class="chap-label">Chương<b>04</b></div>
+      <div>
+        <h2>Một ngày xấu thường kéo theo ngày xấu</h2>
+        <div class="prose"><p id="c4-text"></p></div>
+        <div class="cols">
+          <div><span class="stat num" id="persistStat"></span><p class="small" id="persistNote"></p></div>
+          <div><h3>Số đợt ô nhiễm (≥ 3 ngày liền trên 50 µg/m³) theo tháng bắt đầu</h3><div class="bars" id="epBars"></div></div>
+        </div>
       </div>
-      <div class="card">
-        <h3>Giới hạn cần biết</h3>
-        <ul>
-          <li>Đây là <b>dữ liệu mô hình</b>, không phải trạm đo mặt đất. Mỗi thành phố chỉ có một điểm lưới, nên không phản ánh được khác biệt giữa các quận.</li>
-          <li>Mô hình CAMS có thể lệch so với trạm đo thực tế, nhất là trong mùa mưa. Các con số nên được hiểu là xu hướng, không phải giá trị đo chính xác.</li>
-        </ul>
+    </div>
+  </section>
+
+  <section class="wrap" id="recs">
+    <div class="chap">
+      <div class="chap-label">Khuyến nghị<b>→</b></div>
+      <div>
+        <h2>Dữ liệu nói chúng ta nên làm gì</h2>
+        <div class="prose"><p>Mỗi khuyến nghị dưới đây đi kèm con số làm căn cứ, lấy từ chính bộ dữ liệu của thành phố đang chọn.</p></div>
+        <div class="recs">
+          <div><h3>Cho bạn và gia đình</h3><div id="recsPersonal"></div></div>
+          <div><h3>Cho cộng đồng và chính quyền</h3><div id="recsPublic"></div></div>
+        </div>
       </div>
-      <div class="card">
-        <h3>Hướng phát triển</h3>
-        <ul>
-          <li>Ghép dữ liệu trạm đo (OpenAQ, trạm quan trắc của Sở TN&amp;MT, Đại sứ quán Mỹ) để hiệu chỉnh sai số của mô hình.</li>
-          <li>Huấn luyện mô hình dự báo riêng (gradient boosting dùng đặc trưng trễ và thời tiết) và so sánh với CAMS.</li>
-          <li>Thêm bản đồ theo quận và thông báo đẩy khi không khí xấu đi.</li>
+    </div>
+  </section>
+
+  <section class="wrap" id="tools">
+    <div class="chap">
+      <div class="chap-label">Công cụ<b>✎</b></div>
+      <div>
+        <h2>Tự tính cho chính mình</h2>
+        <div class="tool" style="margin-top:12px">
+          <h3>Mỗi năm bạn hít bao nhiêu bụi?</h3>
+          <p class="small" style="margin:0">Quy đổi theo mốc 22 µg/m³ trong 24 giờ ≈ 1 điếu thuốc (Berkeley Earth). Kết quả dùng thành phố đang chọn ở thanh trên.</p>
+          <div class="form">
+            <label class="f">Giờ ở ngoài trời mỗi ngày: <span id="hrsOut">2</span> giờ<input type="range" id="hrs" min="0" max="12" step="0.5" value="2"></label>
+            <label class="f">Thường ra ngoài lúc<select id="when"><option value="eve">Chiều tối (17–22h)</option><option value="morn">Sáng sớm (6–9h)</option><option value="mid">Giữa ngày (10–15h)</option><option value="any">Rải rác cả ngày</option></select></label>
+            <label class="f">Phương tiện<select id="mode"><option value="1.3">Xe máy</option><option value="1.1">Đi bộ, xe đạp</option><option value="0.6">Ô tô đóng kính</option></select></label>
+            <label class="f">Khẩu trang<select id="mask"><option value="1">Không đeo</option><option value="0.75">Khẩu trang vải, y tế</option><option value="0.25">N95 đeo kín</option></select></label>
+            <label class="f">Trong nhà<select id="indoor"><option value="0.7">Mở cửa bình thường</option><option value="0.3">Có máy lọc không khí</option></select></label>
+          </div>
+          <div class="result">
+            <div><span class="stat num" id="cigNow">–</span><div class="small">điếu thuốc mỗi năm, với thói quen hiện tại</div></div>
+            <div><span class="stat num" id="cigBest">–</span><div class="small">nếu ra ngoài giữa ngày, đeo N95 và dùng máy lọc</div></div>
+            <div><span class="stat num" id="cigSave" style="color:var(--accent)">–</span><div class="small">lượng bụi có thể tránh được</div></div>
+          </div>
+          <p class="small" style="margin:12px 0 0">Giả định: xe máy phơi nhiễm gấp 1,3 lần không khí nền vì sát khí thải. Trong nhà có nồng độ bằng 70% ngoài trời, hoặc 30% nếu có máy lọc. N95 đeo kín lọc khoảng 75%. Đây là ước lượng để so sánh các lựa chọn, không phải chẩn đoán y khoa.</p>
+        </div>
+
+        <div class="tool" style="margin-top:20px">
+          <h3>Lên lịch hoạt động theo dự báo 5 ngày</h3>
+          <div class="form">
+            <label class="f">Hoạt động<select id="act"><option value="1">Chạy bộ, tập thể dục (1 giờ)</option><option value="2">Cho trẻ chơi ngoài trời (2 giờ)</option><option value="1">Đi chợ, việc vặt (1 giờ)</option><option value="3">Mở cửa sổ thông gió (3 giờ)</option></select></label>
+          </div>
+          <div class="chart-box" style="height:220px"><canvas id="fcChart" aria-label="Dự báo PM2.5 theo giờ"></canvas></div>
+          <table class="plan"><thead><tr><th>Ngày</th><th>Nên làm lúc</th><th>Tránh lúc</th><th>Giảm phơi nhiễm</th></tr></thead><tbody id="planBody"><tr><td colspan="4" class="load">Đang tải dự báo…</td></tr></tbody></table>
+        </div>
+
+        <div class="tool" style="margin-top:20px">
+          <h3>Lịch ra ngoài theo tháng</h3>
+          <p class="small" style="margin:0">Khung 2 giờ sạch nhất và bẩn nhất trong khoảng 6h–22h, tính trung bình từ năm 2022. Hàng tô nền là tháng hiện tại.</p>
+          <table class="plan"><thead><tr><th>Tháng</th><th>Nên ra ngoài</th><th>Nên tránh</th><th>Ngày vượt QCVN</th></tr></thead><tbody id="calBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" id="roadmap">
+    <div class="chap">
+      <div class="chap-label">Lộ trình<b>↗</b></div>
+      <div>
+        <h2>Từ trang web đến một dịch vụ công</h2>
+        <div class="prose"><p>Phiên bản hiện tại chứng minh rằng chỉ với dữ liệu mở đã có thể đưa ra lời khuyên cụ thể. Các bước tiếp theo nhằm tăng độ chính xác và đưa thông tin đến đúng người, đúng lúc.</p></div>
+        <ul class="road">
+          <li><span class="tag">Ngắn hạn</span><b>Cảnh báo qua Zalo và thông báo đẩy</b>Mỗi sáng gửi "khung giờ vàng" trong ngày, và báo động sớm khi dự báo bước vào một đợt ô nhiễm nhiều ngày.</li>
+          <li><span class="tag">Ngắn hạn</span><b>Cài như app, song ngữ, thẻ chia sẻ</b>PWA dùng được khi mạng yếu. Có thêm tiếng Anh cho người nước ngoài, và ảnh tóm tắt để chia sẻ lên mạng xã hội.</li>
+          <li><span class="tag">Trung hạn</span><b>Hiệu chỉnh bằng trạm đo thực tế</b>Ghép dữ liệu OpenAQ, trạm của Sở TN&amp;MT và cảm biến giá rẻ cộng đồng để ra bản đồ theo quận.</li>
+          <li><span class="tag">Trung hạn</span><b>Mô hình dự báo riêng</b>Gradient boosting dùng đặc trưng trễ, độ cao lớp biên và gió. Công bố sai số so với CAMS một cách minh bạch.</li>
+          <li><span class="tag">Trung hạn</span><b>Chế độ trường học</b>Lịch ra chơi và giờ thể dục ngoài trời tự điều chỉnh theo dự báo, gửi kèm thông báo cho phụ huynh.</li>
+          <li><span class="tag">Dài hạn</span><b>Lộ trình đi lại ít bụi</b>Gợi ý giờ và tuyến đường ít phơi nhiễm cho người đi xe máy, kết hợp dữ liệu giao thông.</li>
+          <li><span class="tag">Dài hạn</span><b>Báo cáo cộng đồng</b>Người dân báo điểm đốt rác, đốt rơm. Hệ thống đối chiếu với các đỉnh bụi để giúp cơ quan quản lý ưu tiên xử lý.</li>
+          <li><span class="tag">Dài hạn</span><b>API và widget mở</b>Cho báo điện tử, doanh nghiệp, tòa nhà nhúng chỉ số và khuyến nghị vào sản phẩm của họ.</li>
         </ul>
       </div>
     </div>
@@ -211,224 +391,511 @@ footer{padding:40px 0;color:var(--ink-2);font-size:.85rem;text-align:center}
 </main>
 
 <footer class="wrap">
-  Nhịp Thở Đô Thị · Dữ liệu: Open-Meteo, CAMS, ERA5 · Mã nguồn mở trên <a href="https://github.com/NgocThuan130607/nhip-tho-do-thi" target="_blank" rel="noopener">GitHub</a><br>
-  Thông tin chỉ mang tính tham khảo, không thay thế khuyến cáo của cơ quan y tế.
+  <div class="cols">
+    <div><h3>Dữ liệu</h3><ul>
+      <li>PM2.5, PM10, NO₂ theo giờ: <a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank" rel="noopener">Open-Meteo Air Quality API</a> (mô hình CAMS, độ phân giải khoảng 40 km).</li>
+      <li>Gió, mưa, độ cao lớp biên: tái phân tích ERA5 qua <a href="https://open-meteo.com/en/docs/historical-weather-api" target="_blank" rel="noopener">Open-Meteo Historical API</a>.</li>
+      <li>Ngưỡng: WHO 2021 (15 µg/m³), US EPA (35,4 µg/m³), QCVN 05:2023 (50 µg/m³), tất cả là trung bình 24 giờ.</li>
+      <li id="qcNote">Kiểm soát chất lượng: loại các giờ PM2.5 dưới 2 µg/m³ (sự cố dữ liệu CAMS 13–15/12/2022), chỉ giữ ngày có từ 18 giờ dữ liệu trở lên.</li></ul></div>
+    <div><h3>Giới hạn</h3><ul>
+      <li>Đây là dữ liệu mô hình, không phải trạm đo. Mỗi thành phố chỉ có một điểm lưới, nên không thấy được khác biệt giữa các quận.</li>
+      <li>CAMS có thể lệch so với trạm thực tế. Hãy đọc các con số như xu hướng.</li>
+      <li>Thông tin chỉ mang tính tham khảo, không thay thế khuyến cáo y tế.</li></ul></div>
+    <div><h3>Mã nguồn</h3><p style="margin:6px 0">Script phân tích Python và mã trang web đều công khai trên <a href="https://github.com/NgocThuan130607/nhip-tho-do-thi" target="_blank" rel="noopener">GitHub</a>.</p><p class="small" id="genNote"></p></div>
+  </div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 const CITIES = {
-  hanoi: {name: "Hà Nội", lat: 21.028, lon: 105.854, color: "#0b63b0"},
-  hcmc:  {name: "TP. Hồ Chí Minh", lat: 10.776, lon: 106.701, color: "#4f9a5e"},
+  hanoi: {name: "Hà Nội", short: "Hà Nội", lat: 21.028, lon: 105.854},
+  hcmc:  {name: "TP. Hồ Chí Minh", short: "TP.HCM", lat: 10.776, lon: 106.701},
 };
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-
-// Thang US AQI: ngưỡng, tên, màu, lời khuyên theo nhóm
-const LEVELS = [
-  {max: 50,  name: "Tốt",                c: "--good",
-   adv: ["Thoải mái vận động ngoài trời.", "Thoải mái vận động ngoài trời.", "Không cần biện pháp đặc biệt."]},
-  {max: 100, name: "Trung bình",         c: "--moderate",
-   adv: ["Vẫn có thể hoạt động ngoài trời bình thường.", "Hạn chế gắng sức kéo dài ngoài trời.", "Để ý triệu chứng như ho hay khó thở, mang theo thuốc."]},
-  {max: 150, name: "Kém",                c: "--usg",
-   adv: ["Giảm cường độ tập luyện ngoài trời, nên đeo khẩu trang khi đi xe máy.", "Hạn chế ra ngoài, ưu tiên các hoạt động trong nhà.", "Tránh vận động ngoài trời và đóng cửa sổ."]},
-  {max: 200, name: "Xấu",                c: "--bad",
-   adv: ["Hạn chế vận động mạnh ngoài trời, đeo khẩu trang N95.", "Ở trong nhà và bật máy lọc không khí nếu có.", "Ở trong nhà, theo dõi sức khỏe sát sao."]},
-  {max: 300, name: "Rất xấu",            c: "--vbad",
-   adv: ["Tránh mọi hoạt động ngoài trời.", "Ở trong nhà, đóng kín cửa.", "Ở trong nhà và liên hệ bác sĩ nếu có triệu chứng."]},
-  {max: 1e9, name: "Nguy hại",           c: "--haz",
-   adv: ["Ở trong nhà.", "Ở trong nhà.", "Ở trong nhà và chuẩn bị sẵn phương án y tế."]},
-];
-const level = aqi => LEVELS.find(l => aqi <= l.max);
-const GROUPS = [["🏃", "Người khỏe mạnh"], ["👶", "Trẻ em & người cao tuổi"], ["🫁", "Người có bệnh hô hấp, tim mạch"]];
-
-// Màu theo nồng độ PM2.5 cho heatmap và khung giờ (µg/m³)
-const PM_BINS = [[15, "#5fb878", "≤ 15 (WHO)", "Đạt chuẩn WHO"], [25, "#b5d36a", "15–25", "Khá"], [35, "#f2d14b", "25–35", "Trung bình"],
-                 [50, "#f29a3f", "35–50", "Kém"], [75, "#e0533f", "50–75", "Xấu"], [1e9, "#8b3fa8", "> 75", "Rất xấu"]];
-const pmBin = v => PM_BINS.find(b => v <= b[0]);
-const pmColor = v => v == null ? "transparent" : pmBin(v)[1];
-
-const fmtDay = new Intl.DateTimeFormat("vi-VN", {weekday: "long", day: "numeric", month: "numeric"});
+const vn = (x, d = 1) => x == null ? "–" : Number(x).toLocaleString("vi-VN", {maximumFractionDigits: d});
 const pad = n => String(n).padStart(2, "0");
+const fmtDay = new Intl.DateTimeFormat("vi-VN", {weekday: "long", day: "numeric", month: "numeric"});
+const dmy = s => s.split("-").reverse().join("/");
 
-/* ---------- 1 + 2. Hôm nay & dự báo (lấy trực tiếp) ---------- */
+// Thang màu PM2.5 (µg/m³) dùng chung cho mọi hình
+const PM_BINS = [[15, "--p0", "≤ 15 · đạt WHO"], [25, "--p1", "15–25"], [35, "--p2", "25–35"],
+                 [50, "--p3", "35–50"], [75, "--p4", "50–75"], [1e9, "--p5", "> 75"]];
+const pmVar = v => PM_BINS.find(b => v <= b[0])[1];
+const pmColor = v => v == null ? "transparent" : css(pmVar(v));
+
+// Thang US AQI dùng cho phần "Bây giờ"
+const LEVELS = [
+  {max: 50, name: "Tốt", v: "--p0"}, {max: 100, name: "Trung bình", v: "--p2"},
+  {max: 150, name: "Kém với người nhạy cảm", v: "--p3"}, {max: 200, name: "Xấu", v: "--p4"},
+  {max: 300, name: "Rất xấu", v: "--p5"}, {max: 1e9, name: "Nguy hại", v: "--p5"},
+];
+const levelIdx = aqi => LEVELS.findIndex(l => aqi <= l.max);
+
+let INS, CITY = "hanoi";
 const live = {};
+
+/* ================= Bây giờ ================= */
 async function loadLive(key) {
   const c = CITIES[key];
-  const u = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${c.lat}&longitude=${c.lon}` +
-    `&current=pm2_5,pm10,us_aqi&hourly=pm2_5,us_aqi&forecast_days=5&timezone=Asia%2FBangkok`;
-  const r = await fetch(u);
+  const r = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${c.lat}&longitude=${c.lon}` +
+    `&current=pm2_5,us_aqi&hourly=pm2_5&forecast_days=5&timezone=Asia%2FBangkok`);
   if (!r.ok) throw new Error(r.status);
   return live[key] = await r.json();
 }
 
-function renderNow(key, d) {
-  const cur = d.current, lv = level(cur.us_aqi);
-  const pct = Math.min(cur.us_aqi / 300, 1) * 100;
-  const t = cur.time.replace("T", " lúc ");
-  return `<article class="card">
-    <div class="now-head">
-      <div><div class="now-city">${CITIES[key].name}</div><div class="now-time">Cập nhật ${t}</div></div>
-      <span class="badge" style="background:var(${lv.c})">${lv.name}</span>
-    </div>
-    <div class="now-val"><b>${Math.round(cur.pm2_5)}</b><span>µg/m³ PM2.5 · AQI ${cur.us_aqi}</span></div>
-    <div class="muted">Gấp ${(cur.pm2_5 / 15).toFixed(1)} lần ngưỡng 24h của WHO · PM10: ${Math.round(cur.pm10)} µg/m³</div>
-    <div class="meter" aria-hidden="true"><i style="left:${pct}%"></i></div>
-    <ul class="advice">${GROUPS.map((g, i) =>
-      `<li><span class="ic">${g[0]}</span><span><b>${g[1]}</b>${lv.adv[i]}</span></li>`).join("")}</ul>
-  </article>`;
+// Các giờ dự báo còn lại (từ giờ hiện tại trở đi)
+function futureHours(d) {
+  const now = d.current.time.slice(0, 13);
+  return d.hourly.time.map((t, i) => ({t, d: t.slice(0, 10), h: +t.slice(11, 13), v: d.hourly.pm2_5[i]}))
+    .filter(x => x.v != null && x.t.slice(0, 13) >= now);
 }
 
-// Tìm khung 2 giờ sạch nhất trong 6h–21h mỗi ngày (chỉ xét giờ chưa qua)
-function goldenWindows(d) {
-  const nowStr = d.current.time.slice(0, 13);
+// Khung len giờ tốt nhất/tệ nhất mỗi ngày trong 6h–22h
+function windows(d, len) {
   const byDay = {};
-  d.hourly.time.forEach((t, i) => {
-    const h = +t.slice(11, 13), v = d.hourly.pm2_5[i];
-    if (h < 6 || h > 20 || v == null || t.slice(0, 13) < nowStr) return;
-    (byDay[t.slice(0, 10)] ||= []).push({h, v, aqi: d.hourly.us_aqi[i]});
-  });
+  futureHours(d).filter(x => x.h >= 6 && x.h < 22).forEach(x => (byDay[x.d] ||= []).push(x));
   return Object.entries(byDay).map(([day, hs]) => {
-    let best = null;
-    for (let i = 0; i < hs.length - 1; i++) {
-      if (hs[i + 1].h !== hs[i].h + 1) continue;
-      const avg = (hs[i].v + hs[i + 1].v) / 2;
-      if (!best || avg < best.avg) best = {start: hs[i].h, avg, aqi: Math.max(hs[i].aqi, hs[i + 1].aqi)};
+    const opts = [];
+    for (let i = 0; i + len <= hs.length; i++) {
+      const s = hs.slice(i, i + len);
+      if (s[len - 1].h - s[0].h !== len - 1) continue;
+      opts.push({start: s[0].h, avg: s.reduce((a, b) => a + b.v, 0) / len});
     }
-    return best && {day, ...best};
+    if (opts.length < 2) return null;
+    opts.sort((a, b) => a.avg - b.avg);
+    return {day, best: opts[0], worst: opts[opts.length - 1]};
   }).filter(Boolean);
 }
 
-let fcChart;
-function renderForecast(key) {
-  const d = live[key];
-  const box = document.getElementById("windows");
-  if (!d) { box.innerHTML = `<p class="err">Chưa tải được dự báo. Hãy thử tải lại trang.</p>`; return; }
-  const labels = d.hourly.time.map(t => t.slice(8, 10) + "/" + t.slice(5, 7) + " " + t.slice(11, 13) + "h");
-  const data = d.hourly.pm2_5;
-  const grid = css("--line"), ink = css("--ink-2");
-  fcChart?.destroy();
-  fcChart = new Chart(document.getElementById("fcChart"), {
-    type: "line",
-    data: {labels, datasets: [
-      {label: "PM2.5 dự báo (µg/m³)", data, borderColor: CITIES[key].color, backgroundColor: CITIES[key].color + "22",
-       fill: true, tension: .35, pointRadius: 0, borderWidth: 2},
-      {label: "WHO 24h", data: data.map(() => 15), borderColor: css("--good"), borderDash: [6, 4], pointRadius: 0, borderWidth: 1.5},
-    ]},
-    options: {maintainAspectRatio: false, interaction: {mode: "index", intersect: false},
-      plugins: {legend: {labels: {color: ink, boxWidth: 14}}},
-      scales: {x: {ticks: {color: ink, maxTicksLimit: 10, maxRotation: 0}, grid: {display: false}},
-               y: {beginAtZero: true, ticks: {color: ink}, grid: {color: grid}}}},
-  });
-  box.innerHTML = goldenWindows(d).map(w =>
-    `<div class="win"><div class="d">${fmtDay.format(new Date(w.day + "T12:00"))}</div>
-      <div class="t">${pad(w.start)}:00–${pad(w.start + 2)}:00</div>
-      <div class="v"><span class="dot" style="background:${pmColor(w.avg)}"></span>~${Math.round(w.avg)} µg/m³ · ${pmBin(w.avg)[3]}</div></div>`
-  ).join("");
+function renderNow(key) {
+  const d = live[key], cur = d.current, li = levelIdx(cur.us_aqi), lv = LEVELS[li];
+  const fut = futureHours(d);
+  const next24 = fut.slice(0, 24), next6 = fut.slice(1, 7);
+  const avg24 = next24.reduce((a, b) => a + b.v, 0) / next24.length;
+  const avg6 = next6.reduce((a, b) => a + b.v, 0) / next6.length;
+  const w = windows(d, 2).find(x => x.best) ;
+  const trend = avg6 > cur.pm2_5 * 1.1 ? "tăng" : avg6 < cur.pm2_5 * 0.9 ? "giảm" : "đi ngang";
+  const home = cur.pm2_5 <= 25 ? "Có thể mở cửa sổ cho thoáng nhà."
+    : cur.pm2_5 <= 50 ? "Đóng cửa sổ phía mặt đường. Người nhạy cảm nên hạn chế gắng sức ngoài trời."
+    : "Đóng cửa sổ, bật máy lọc không khí nếu có. Trẻ nhỏ và người già nên ở trong nhà.";
+  const out = cur.pm2_5 <= 25 ? "Không cần biện pháp đặc biệt khi ra đường."
+    : cur.pm2_5 <= 50 ? "Nên đeo khẩu trang khi đi xe máy."
+    : "Đeo N95 nếu buộc phải ra ngoài, tránh chạy bộ hay tập luyện mạnh.";
+  const wDay = w ? (w.day === cur.time.slice(0, 10) ? "hôm nay" : fmtDay.format(new Date(w.day + "T12:00")).toLowerCase()) : "";
+  document.getElementById("now-" + key).innerHTML = `
+    <div class="caps">${CITIES[key].name} · ${cur.time.slice(11)} hôm nay</div>
+    <div class="big"><b class="num">${Math.round(cur.pm2_5)}</b><span class="small">µg/m³ PM2.5<br>US AQI ${cur.us_aqi}</span></div>
+    <div class="lvl"><span class="sq" style="background:var(${lv.v})"></span>${lv.name}</div>
+    <div class="small">Nếu cả ngày như dự báo, lượng bụi hít vào tương đương <b>${vn(avg24 / 22)} điếu thuốc</b>.</div>
+    <ul class="actions">
+      ${w ? `<li><span>Ra ngoài</span><span>Khung đẹp nhất sắp tới: <b>${pad(w.best.start)}:00–${pad(w.best.start + 2)}:00 ${wDay}</b>, khoảng ${Math.round(w.best.avg)} µg/m³.</span></li>` : ""}
+      <li><span>Ở nhà</span><span>${home}</span></li>
+      <li><span>Đi đường</span><span>${out}</span></li>
+      <li><span>6 giờ tới</span><span>Bụi có xu hướng <b>${trend}</b>, trung bình khoảng ${Math.round(avg6)} µg/m³.</span></li>
+    </ul>`;
 }
 
-/* ---------- 3. Dữ liệu lịch sử ---------- */
-let INS, dailyChart, windChart, yearChart;
-const fmtNum = v => String(v).replace(".", ",");
-
-function rolling(arr, n) {
-  return arr.map((_, i) => {
-    const s = arr.slice(Math.max(0, i - n + 1), i + 1);
-    return +(s.reduce((a, b) => a + b, 0) / s.length).toFixed(1);
+/* ================= Câu chuyện dữ liệu ================= */
+function renderStripes() {
+  const box = document.getElementById("stripes");
+  const keys = Object.keys(CITIES);
+  const n = INS.cities.hanoi.daily.length;
+  let html = "";
+  keys.forEach(k => {
+    const days = INS.cities[k].daily;
+    const rects = days.map((r, i) => `<rect x="${i}" y="0" width="1.02" height="10" fill="${pmColor(r[1])}"><title>${dmy(r[0])}: ${vn(r[1])} µg/m³</title></rect>`).join("");
+    html += `<div class="stripe-row"><span class="caps">${CITIES[k].short}</span>
+      <svg viewBox="0 0 ${days.length} 10" preserveAspectRatio="none" role="img" aria-label="Mỗi vạch là một ngày ở ${CITIES[k].name}">${rects}</svg></div>`;
   });
+  const days = INS.cities.hanoi.daily;
+  const ticks = days.map((r, i) => [r[0], i]).filter(([d]) => d.endsWith("-01-01"))
+    .map(([d, i]) => `<span style="left:${100 * i / n}%">${d.slice(0, 4)}</span>`).join("");
+  html += `<div class="stripe-axis"><i></i><div>${ticks}</div></div>`;
+  html += `<div class="legend">${PM_BINS.map(b => `<span><span class="sq" style="background:var(${b[1]})"></span>${b[2]}</span>`).join("")}<span>µg/m³, trung bình ngày</span></div>`;
+  box.innerHTML = html;
 }
 
-function renderHistoryStatic() {
+function renderLede() {
+  const s = INS.cities.hanoi.summary, s2 = INS.cities.hcmc.summary;
+  document.getElementById("lede").innerHTML =
+    `Trong <b>${vn(s.days, 0)}</b> ngày quan sát, Hà Nội có <b>${vn(s.who_days, 0)}</b> ngày vượt ngưỡng an toàn của WHO. ` +
+    `Chỉ riêng việc hít thở ở đây mỗi năm đã tương đương hút khoảng <b>${s.cig_per_year} điếu thuốc</b>. ` +
+    `Ở TP.HCM, con số đó là ${s2.cig_per_year}. Mỗi vạch dưới đây là một ngày.`;
   const [a, b] = INS.period;
-  document.getElementById("periodNote").textContent =
-    `Phân tích dữ liệu PM2.5 theo giờ từ ${a.split("-").reverse().join("/")} đến ${b.split("-").reverse().join("/")}, ghép với gió, mưa, độ ẩm và nhiệt độ.`;
-  const ink = css("--ink-2"), grid = css("--line");
-  const hn = INS.cities.hanoi, hcm = INS.cities.hcmc;
-  dailyChart = new Chart(document.getElementById("dailyChart"), {
-    type: "line",
-    data: {labels: hn.daily.map(r => r[0]), datasets: [
-      {label: "Hà Nội", data: rolling(hn.daily.map(r => r[1]), 7), borderColor: CITIES.hanoi.color, pointRadius: 0, borderWidth: 1.6, tension: .3},
-      {label: "TP.HCM", data: rolling(hcm.daily.map(r => r[1]), 7), borderColor: CITIES.hcmc.color, pointRadius: 0, borderWidth: 1.6, tension: .3},
-      {label: "WHO 24h", data: hn.daily.map(() => 15), borderColor: css("--good"), borderDash: [6, 4], pointRadius: 0, borderWidth: 1.2},
-    ]},
-    options: {maintainAspectRatio: false, interaction: {mode: "index", intersect: false},
-      plugins: {legend: {labels: {color: ink, boxWidth: 14}}},
-      scales: {x: {ticks: {color: ink, maxTicksLimit: 9, maxRotation: 0, callback(v) { const l = this.getLabelForValue(v); return l.slice(5, 7) + "/" + l.slice(0, 4); }}, grid: {display: false}},
-               y: {beginAtZero: true, ticks: {color: ink}, grid: {color: grid}}}},
-  });
-  document.getElementById("findings").innerHTML = INS.findings.map(f => `<li>${f.replace(/(\d+)\.(\d)/g, "$1,$2")}</li>`).join("");
-  document.getElementById("heatLegend").innerHTML = PM_BINS.map(b => `<span><i style="background:${b[1]}"></i>${b[2]}</span>`).join("") + `<span class="muted">µg/m³</span>`;
+  document.getElementById("genNote").textContent = `Dữ liệu lịch sử từ ${dmy(a)} đến ${dmy(b)}, phân tích ngày ${dmy(INS.generated)}.`;
+  document.getElementById("qcNote").textContent = `Kiểm soát chất lượng: loại ${s.qc_removed_hours + s2.qc_removed_hours} giờ có PM2.5 dưới 2 µg/m³ (sự cố dữ liệu CAMS khoảng 13–15/12/2022), chỉ giữ ngày có từ 18 giờ dữ liệu trở lên. Tổng cộng ${vn(s.hours + s2.hours, 0)} giờ dữ liệu được phân tích.`;
 }
 
-function renderHistory(key) {
-  const c = INS.cities[key], s = c.summary, ink = css("--ink-2"), grid = css("--line");
-  const worst = s.worst_days[0];
-  document.getElementById("kpis").innerHTML = [
-    [fmtNum(s.mean_pm), "µg/m³ PM2.5 trung bình", `Gấp ${Math.round(s.mean_pm / 5)} lần mức WHO khuyến nghị cho trung bình năm`],
-    [s.who_pct + "%", "số ngày vượt ngưỡng WHO", "Trung bình 24h trên 15 µg/m³"],
-    [fmtNum(s.qcvn_pct) + "%", "số ngày vượt chuẩn Việt Nam", "QCVN 05:2023: trung bình 24h trên 50 µg/m³"],
-    [fmtNum(worst.pm), "µg/m³ vào ngày tệ nhất", worst.date.split("-").reverse().join("/")],
-  ].map(k => `<div class="card kpi"><div class="n">${k[0]}</div><div class="l">${k[1]}</div><div class="c">${k[2]}</div></div>`).join("");
+const curMonth = new Date().getMonth() + 1;
 
-  // Heatmap
-  document.getElementById("heatCity").textContent = "· " + c.name;
+function renderC1(c) {
+  const m = c.monthly, worst = [...m].sort((a, b) => b.pm - a.pm), hourly = c.hourly;
+  const lo = [...Array(16).keys()].map(i => i + 6).reduce((a, b) => hourly[b] < hourly[a] ? b : a);
+  const hi = [...Array(24).keys()].reduce((a, b) => hourly[b] > hourly[a] ? b : a);
+  document.getElementById("c1-text").innerHTML =
+    `Ở ${c.name}, tháng nặng nhất là tháng ${worst[0].month} và tháng ${worst[1].month}. Khi đó PM2.5 trung bình ${vn(worst[0].pm)} và ${vn(worst[1].pm)} µg/m³, ` +
+    `${worst[0].qcvn_pct}% số ngày tháng ${worst[0].month} vượt chuẩn Việt Nam. Nhưng khác biệt lớn hơn nằm <i>trong một ngày</i>: ` +
+    `PM2.5 thường thấp nhất khoảng ${lo}h (${vn(hourly[lo])} µg/m³) và cao nhất khoảng ${hi}h (${vn(hourly[hi])} µg/m³). ` +
+    `Chỉ cần đổi giờ ra ngoài đã giảm được khoảng <b>${Math.round(100 * (1 - hourly[lo] / hourly[hi]))}%</b> lượng bụi hít vào.`;
   let h = `<div class="lab"></div>` + Array.from({length: 24}, (_, i) => `<div class="hl">${i}</div>`).join("");
-  c.heatmap.forEach((row, m) => {
-    h += `<div class="lab">T${m + 1}</div>` + row.map((v, hr) =>
-      `<div style="background:${pmColor(v)}" title="Tháng ${m + 1}, ${hr}h: ${v} µg/m³"></div>`).join("");
+  c.heatmap.forEach((row, mi) => {
+    h += `<div class="lab">T${mi + 1}</div>` + row.map((v, hr) =>
+      `<div class="${mi + 1 === curMonth ? "now-m" : ""}" style="background:${pmColor(v)}" title="Tháng ${mi + 1}, ${hr}h: ${vn(v)} µg/m³"></div>`).join("");
   });
   document.getElementById("heat").innerHTML = h;
+  document.getElementById("legend1").innerHTML = PM_BINS.map(b => `<span><span class="sq" style="background:var(${b[1]})"></span>${b[2]}</span>`).join("");
+}
 
-  // Gió
-  windChart?.destroy();
-  windChart = new Chart(document.getElementById("windChart"), {
-    type: "bar",
-    data: {labels: c.wind.map(w => w.label), datasets: [{label: "PM2.5 (µg/m³)", data: c.wind.map(w => w.pm),
-      backgroundColor: c.wind.map(w => pmColor(w.pm)), borderRadius: 6}]},
-    options: {maintainAspectRatio: false, plugins: {legend: {display: false},
-      tooltip: {callbacks: {afterLabel: ctx => `${c.wind[ctx.dataIndex].hours.toLocaleString("vi-VN")} giờ dữ liệu`}}},
-      scales: {x: {ticks: {color: ink}, grid: {display: false}, title: {display: true, text: "Tốc độ gió (km/h)", color: ink}},
-               y: {beginAtZero: true, ticks: {color: ink}, grid: {color: grid}}}},
-  });
-
-  // Mưa
-  const r = c.rain;
-  document.getElementById("rain").innerHTML =
-    `<div><span class="muted">🌧️ Ngày có mưa</span><b style="color:${pmColor(r.wet_pm)}">${fmtNum(r.wet_pm)}</b><span class="muted">${r.wet_days} ngày</span></div>
-     <div><span class="muted">☀️ Ngày khô</span><b style="color:${pmColor(r.dry_pm)}">${fmtNum(r.dry_pm)}</b><span class="muted">${r.dry_days} ngày</span></div>`;
-
-  // Theo năm
-  yearChart?.destroy();
-  yearChart = new Chart(document.getElementById("yearChart"), {
-    type: "bar",
-    data: {labels: c.yearly.map(y => y.year + (y.days < 360 ? "*" : "")), datasets: [{data: c.yearly.map(y => y.pm),
-      backgroundColor: CITIES[key].color, borderRadius: 6}]},
-    options: {maintainAspectRatio: false, indexAxis: "y", plugins: {legend: {display: false},
-      tooltip: {callbacks: {label: ctx => `${ctx.raw} µg/m³ (${c.yearly[ctx.dataIndex].days} ngày dữ liệu)`}}},
-      scales: {x: {beginAtZero: true, ticks: {color: ink}, grid: {color: grid}}, y: {ticks: {color: ink}, grid: {display: false}}}},
+let eveChart;
+function renderC2(c) {
+  const d = c.diurnal.dry;
+  const blhDay = Math.max(...d.blh), blhNight = Math.min(...d.blh.slice(18), ...d.blh.slice(0, 6));
+  const pmNoon = Math.min(...d.pm.slice(9, 17)), pmEve = Math.max(...d.pm.slice(17));
+  const no2Lo = Math.min(...d.no2), no2Hi = Math.max(...d.no2), no2HiH = d.no2.indexOf(no2Hi);
+  document.getElementById("c2-text").innerHTML =
+    `Ban ngày, mặt trời làm nóng mặt đất và khuấy trộn một lớp không khí dày khoảng <b>${vn(blhDay, 0)} m</b> (gọi là lớp biên). ` +
+    `Sau hoàng hôn, lớp này sụp xuống chỉ còn khoảng <b>${vn(blhNight, 0)} m</b>. Đúng lúc đó, khí thải giờ tan tầm đổ ra đường. ` +
+    `NO₂, chất chỉ dấu của khói xe, tăng từ ${vn(no2Lo)} lên ${vn(no2Hi)} µg/m³ vào khoảng ${no2HiH}h. ` +
+    `Cùng một lượng khí thải bị nhốt trong "chiếc hộp" mỏng hơn ${vn(blhDay / blhNight, 0)} lần, nên PM2.5 vọt từ ${vn(pmNoon)} lên ${vn(pmEve)} µg/m³. ` +
+    `Vì vậy buổi tối là lúc tệ nhất để chạy bộ hay mở cửa sổ, kể cả khi đường đã vắng.`;
+  const ink = css("--ink-2"), grid = css("--rule");
+  eveChart?.destroy();
+  eveChart = new Chart(document.getElementById("eveChart"), {
+    data: {labels: [...Array(24).keys()].map(h => h + "h"), datasets: [
+      {type: "line", label: "PM2.5", data: d.pm, borderColor: css("--accent"), borderWidth: 2.5, pointRadius: 0, tension: .35, yAxisID: "y"},
+      {type: "line", label: "NO₂ (khói xe)", data: d.no2, borderColor: css("--ink"), borderDash: [5, 4], borderWidth: 1.5, pointRadius: 0, tension: .35, yAxisID: "y"},
+      {type: "line", label: "Độ cao lớp biên (m)", data: d.blh, borderColor: "transparent", backgroundColor: css("--p0") + "55", fill: true, pointRadius: 0, tension: .35, yAxisID: "y2"},
+    ]},
+    options: {maintainAspectRatio: false, interaction: {mode: "index", intersect: false},
+      plugins: {legend: {position: "top", align: "start", labels: {color: ink, boxWidth: 18, boxHeight: 2, font: {family: "Be Vietnam Pro"}}}},
+      scales: {x: {ticks: {color: ink, maxTicksLimit: 12, maxRotation: 0}, grid: {display: false}},
+        y: {beginAtZero: true, title: {display: true, text: "µg/m³", color: ink}, ticks: {color: ink}, grid: {color: grid}},
+        y2: {position: "right", beginAtZero: true, title: {display: true, text: "mét", color: ink}, ticks: {color: ink}, grid: {display: false}}}},
   });
 }
 
-/* ---------- Tabs ---------- */
-document.querySelectorAll("[data-tabs]").forEach(group => {
-  group.addEventListener("click", e => {
-    const b = e.target.closest("button"); if (!b) return;
-    group.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
-    if (group.dataset.tabs === "forecast") renderForecast(b.dataset.city);
-    else if (INS) renderHistory(b.dataset.city);
-  });
-});
+function bars(id, items, max, colorFn) {
+  document.getElementById(id).innerHTML = items.map(it => `<div class="bar"><span>${it.label}</span>
+    <span class="track"><span class="fill" style="width:${Math.max(2, 100 * it.v / max)}%;background:${colorFn ? colorFn(it) : pmColor(it.v)}"></span></span>
+    <span class="v">${it.text ?? vn(it.v)}</span></div>`).join("");
+}
 
-/* ---------- Khởi động ---------- */
-Promise.allSettled(Object.keys(CITIES).map(loadLive)).then(res => {
-  document.getElementById("nowCards").innerHTML = Object.keys(CITIES).map((k, i) =>
-    res[i].status === "fulfilled" ? renderNow(k, live[k])
-      : `<div class="card err">Không tải được dữ liệu ${CITIES[k].name}. Hãy thử tải lại trang.</div>`).join("");
-  renderForecast("hanoi");
+function renderC3(c) {
+  const w = c.wind, r = c.rain, wd = c.wind_dir.filter(x => x.pm != null);
+  const top = [...wd].filter(x => x.share >= 3).sort((a, b) => b.pm - a.pm);
+  const tetAvg = c.tet.reduce((a, t) => a + t.change_pct, 0) / c.tet.length;
+  document.getElementById("c3-text").innerHTML =
+    `Gió là "máy lọc" miễn phí của thành phố. Khi gió dưới 5 km/h, PM2.5 ở ${c.name} trung bình ${vn(w[0].pm)} µg/m³. Khi gió từ 20 km/h trở lên, con số này chỉ còn ${vn(w[w.length - 1].pm)}. ` +
+    `Ngày mưa sạch hơn ngày khô (${vn(r.wet_pm)} so với ${vn(r.dry_pm)} µg/m³). ` +
+    `Bất ngờ nhất là Tết: dù thành phố vắng xe cả tuần, PM2.5 trong tuần Tết thay đổi trung bình <b>${tetAvg > 0 ? "+" : ""}${Math.round(tetAvg)}%</b> so với các tuần xung quanh và không giảm đều đặn qua các năm. ` +
+    `Điều đó cho thấy thời tiết, pháo hoa, hương khói và bụi từ vùng lân cận nặng ký không kém giao thông nội đô. Ô nhiễm vì thế là bài toán của <i>cả vùng</i>, không riêng một thành phố.`;
+  const wmax = Math.max(...w.map(x => x.pm));
+  bars("windBars", w.map(x => ({label: x.label + " km/h", v: x.pm})), wmax);
+  bars("dirBars", [...wd].sort((a, b) => b.pm - a.pm).map(x => ({label: `${x.dir} <span class="small">· ${vn(x.share, 0)}%</span>`, v: x.pm})), Math.max(...wd.map(x => x.pm)));
+  bars("rainBars", [{label: "Ngày khô", v: r.dry_pm}, {label: "Ngày mưa", v: r.wet_pm}, {label: "Sau mưa to", v: r.after_heavy_rain_pm}], Math.max(r.dry_pm, r.wet_pm));
+  bars("tetBars", c.tet.map(t => ({label: "Tết " + t.year, v: Math.abs(t.change_pct), text: (t.change_pct > 0 ? "+" : "") + t.change_pct + "%"})), 30,
+    it => it.text.startsWith("+") ? css("--p4") : css("--p0"));
+}
+
+function renderC4(c) {
+  const p = c.persistence, e = c.episodes;
+  const peakM = e.by_month.indexOf(Math.max(...e.by_month)) + 1;
+  document.getElementById("c4-text").innerHTML =
+    `Ô nhiễm có quán tính. Ở ${c.name}, nếu hôm nay trung bình vượt 50 µg/m³ (chuẩn QCVN) thì khả năng ngày mai vẫn vượt là <b>${vn(p.bad_after_bad, 0)}%</b>. ` +
+    `Nếu hôm nay dưới ngưỡng, khả năng đó chỉ là ${vn(p.bad_after_ok, 0)}%. Từ 2022 đến nay có <b>${e.count}</b> đợt ô nhiễm kéo dài từ 3 ngày trở lên` +
+    (e.longest ? `, đợt dài nhất kéo dài ${e.longest.len} ngày từ ${dmy(e.longest.start)} với đỉnh ${vn(e.longest.peak)} µg/m³` : "") +
+    `. Các đợt hay bắt đầu nhất vào tháng ${peakM}. Ngày đầu tiên vượt ngưỡng chính là tín hiệu cảnh báo sớm tốt nhất.`;
+  document.getElementById("persistStat").textContent = vn(p.bad_after_bad, 0) + "%";
+  document.getElementById("persistNote").textContent = "khả năng ngày mai vẫn vượt QCVN nếu hôm nay đã vượt";
+  const mx = Math.max(1, ...e.by_month);
+  bars("epBars", e.by_month.map((v, i) => ({label: "Tháng " + (i + 1), v, text: String(v)})), mx, () => css("--accent"));
+}
+
+/* ================= Khuyến nghị ================= */
+function renderRecs(c) {
+  const s = c.summary, m = c.monthly, h = c.hourly, d = c.diurnal.dry;
+  const lo = [...Array(16).keys()].map(i => i + 6).reduce((a, b) => h[b] < h[a] ? b : a);
+  const eveHi = [...Array(7).keys()].map(i => i + 17).reduce((a, b) => h[b] > h[a] ? b : a);
+  const maskMonths = [...m].sort((a, b) => b.qcvn_pct - a.qcvn_pct).slice(0, 4).filter(x => x.qcvn_pct >= 15).map(x => x.month).sort((a, b) => a - b);
+  const sensMonths = m.filter(x => x.sens_pct >= 50).map(x => x.month);
+  const sensText = sensMonths.length >= 10 ? ", gần như quanh năm." : sensMonths.length ? `, dồn vào ${"tháng " + sensMonths.join(", ")}.` : ".";
+  const ep = c.episodes, p = c.persistence;
+  const topEp = ep.by_month.map((v, i) => [v, i + 1]).sort((a, b) => b[0] - a[0]).slice(0, 2).map(x => x[1]).sort((a, b) => a - b);
+  const tetAvg = Math.round(c.tet.reduce((a, t) => a + t.change_pct, 0) / c.tet.length);
+  const list = arr => arr.length ? "tháng " + arr.join(", ") : "không tháng nào";
+  const personal = [
+    ["Tập thể dục giữa ngày, không phải buổi tối",
+     `Dời giờ chạy bộ sang khoảng ${lo}h–${lo + 2}h thay vì ${eveHi}h giúp giảm khoảng ${Math.round(100 * (1 - h[lo] / h[eveHi]))}% lượng bụi hít vào.`,
+     `PM2.5 trung bình lúc ${lo}h là ${vn(h[lo])} µg/m³, lúc ${eveHi}h là ${vn(h[eveHi])} µg/m³.`],
+    ["Mở cửa sổ buổi trưa, đóng cửa sổ từ chiều tối",
+     `Thông gió nhà vào khoảng 11h–15h, khi lớp không khí dày nhất. Đóng cửa sổ phía mặt đường từ khoảng 17h đến sáng hôm sau.`,
+     `Mùa khô, lớp biên ban trưa dày khoảng ${vn(Math.max(...d.blh), 0)} m, ban đêm chỉ khoảng ${vn(Math.min(...d.blh.slice(18)), 0)} m.`],
+    ["Đeo khẩu trang N95 khi đi xe máy trong các tháng cao điểm",
+     maskMonths.length ? `Đặc biệt trong ${list(maskMonths)}. Khẩu trang vải hầu như không lọc được PM2.5.` : "Đặc biệt vào những ngày PM2.5 trên 50 µg/m³.",
+     `Đây là 4 tháng có tỉ lệ ngày vượt chuẩn Việt Nam 50 µg/m³ cao nhất (${maskMonths.map(k => m[k - 1].qcvn_pct + "%").join(", ")}).`],
+    ["Máy lọc không khí cho phòng ngủ của người nhạy cảm",
+     `Trẻ nhỏ, người già, người có bệnh hô hấp hay tim mạch cần được bảo vệ khoảng ${s.sens_days_per_year} ngày mỗi năm${sensText}`,
+     `Số ngày có trung bình 24h vượt 35,4 µg/m³ (mức "kém với người nhạy cảm" của US EPA).`],
+    ["Một ngày xấu, chuẩn bị cho cả tuần",
+     `Khi PM2.5 hôm nay vượt 50 µg/m³, hãy lên kế hoạch cho 2–3 ngày tới, như dời buổi dã ngoại hay chuẩn bị khẩu trang cho con đi học.`,
+     `Có ${vn(p.bad_after_bad, 0)}% khả năng ngày mai vẫn vượt ngưỡng, so với ${vn(p.bad_after_ok, 0)}% bình thường.`],
+  ];
+  const pub = [
+    ["Ưu tiên cắt giảm phát thải khung 17h–22h",
+     `Điều tiết xe tải, công trường và lò đốt rác vào buổi tối, khi khí quyển "đóng nắp", để mỗi tấn khí thải cắt được có tác dụng lớn nhất.`,
+     `NO₂ đạt đỉnh khoảng ${d.no2.indexOf(Math.max(...d.no2))}h, PM2.5 tăng khoảng ${Math.round(100 * (Math.max(...d.pm.slice(17)) / Math.min(...d.pm.slice(9, 17)) - 1))}% so với buổi trưa.`],
+    ["Kích hoạt kế hoạch ứng phó ngay từ ngày đầu tiên vượt ngưỡng",
+     `Thông báo sớm qua Zalo, loa phường và trường học, tập trung vào ${list(topEp)} khi các đợt ô nhiễm hay bắt đầu nhất.`,
+     `${ep.count} đợt từ 3 ngày trở lên kể từ 2022. Đợt dài nhất kéo dài ${ep.longest ? ep.longest.len : "–"} ngày.`],
+    ["Trường học dời giờ thể dục ngoài trời sang giữa ngày",
+     `Trong các tháng cao điểm, giờ thể dục và ra chơi ngoài trời nên đặt vào khoảng ${lo}h–${lo + 2}h, tránh đầu giờ sáng và cuối giờ chiều.`,
+     `Theo lịch tháng ở phần Công cụ: khung sạch nhất mỗi tháng đều nằm quanh giữa trưa.`],
+    ["Hợp tác vùng, không chỉ hạn chế xe trong nội đô",
+     `Kiểm soát đốt rơm rạ, đốt rác và các nguồn công nghiệp ở các tỉnh lân cận, nhất là vào mùa khô.`,
+     `Tuần Tết vắng xe nhưng PM2.5 thay đổi trung bình ${tetAvg > 0 ? "+" : ""}${tetAvg}%, nghĩa là giao thông không phải nguồn duy nhất.`],
+    ["Công khai dữ liệu trạm đo theo thời gian thực",
+     `Mở API dữ liệu quan trắc để cộng đồng và doanh nghiệp xây công cụ như trang này với độ chính xác theo từng quận.`,
+     `Hiện các phân tích mở vẫn phải dựa vào mô hình toàn cầu với độ phân giải khoảng 40 km.`],
+  ];
+  const tpl = arr => arr.map((r, i) => `<div class="rec"><span class="n">${pad(i + 1)}</span><div><h4>${r[0]}</h4><p>${r[1]}</p><span class="why">Căn cứ: ${r[2]}</span></div></div>`).join("");
+  document.getElementById("recsPersonal").innerHTML = tpl(personal);
+  document.getElementById("recsPublic").innerHTML = tpl(pub);
+}
+
+/* ================= Công cụ ================= */
+// Mô hình phơi nhiễm đơn giản: nồng độ hiệu dụng trung bình 24h (µg/m³)
+const SPANS = {eve: [17, 22], morn: [6, 9], mid: [10, 15], any: [0, 24]};
+function doseFor(c, {hrs, when, mode, mask, indoor}) {
+  const avg = ([a, b]) => c.hourly.slice(a, b).reduce((x, y) => x + y, 0) / (b - a);
+  return (hrs * avg(SPANS[when]) * mode * mask + (24 - hrs) * avg([0, 24]) * indoor) / 24;
+}
+const cigYear = x => x / 22 * 365;
+
+function calcExposure() {
+  const c = INS.cities[CITY], g = id => document.getElementById(id).value;
+  const hrs = +g("hrs");
+  document.getElementById("hrsOut").textContent = vn(hrs);
+  const now = doseFor(c, {hrs, when: g("when"), mode: +g("mode"), mask: +g("mask"), indoor: +g("indoor")});
+  const best = doseFor(c, {hrs, when: "mid", mode: +g("mode"), mask: 0.25, indoor: 0.3});
+  document.getElementById("cigNow").textContent = vn(cigYear(now), 0);
+  document.getElementById("cigBest").textContent = vn(cigYear(best), 0);
+  document.getElementById("cigSave").textContent = Math.max(0, Math.round(100 * (1 - best / now))) + "%";
+}
+
+/* ================= Bạn đã trải qua những gì? ================= */
+const DAILY = {};  // {city: {"yyyy-mm-dd": pm}}
+const HABIT = {hrs: 2, when: "eve", mode: 1.3, mask: 1, indoor: 0.7};  // thói quen phổ biến
+const PLEDGES = [
+  ["run", "Chạy bộ, đi lại vào giữa ngày thay vì chiều tối", {when: "mid"}],
+  ["n95", "Đeo khẩu trang N95 khi đi xe máy", {mask: 0.25}],
+  ["purifier", "Đặt máy lọc không khí trong phòng ngủ", {indoor: 0.3}],
+  ["window", "Đóng cửa sổ từ 17h đến sáng hôm sau", {indoor: 0.55}],
+];
+let TQ = null;  // kết quả hiện tại
+
+function onThisDay() {
+  const now = new Date(), md = `${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  const years = [...new Set(INS.cities.hanoi.daily.map(r => r[0].slice(0, 4)))];
+  const parts = years.map(y => `${y}-${md}`).filter(d => DAILY.hanoi[d] != null)
+    .map(d => `<b>${dmy(d)}</b>: Hà Nội ${vn(DAILY.hanoi[d], 0)}, TP.HCM ${vn(DAILY.hcmc[d], 0)} µg/m³`);
+  document.getElementById("otd").innerHTML = parts.length
+    ? `<span class="caps" style="margin-right:8px">Ngày này các năm trước</span> ${parts.join(" · ")}`
+    : `<span class="caps">Ngày này các năm trước</span> chưa có dữ liệu.`;
+}
+
+function initTQ() {
+  const opt = (v, t, sel) => `<option value="${v}"${sel ? " selected" : ""}>${t}</option>`;
+  document.getElementById("tqDay").innerHTML = [...Array(31).keys()].map(i => opt(i + 1, i + 1, i === 0)).join("");
+  document.getElementById("tqMonth").innerHTML = [...Array(12).keys()].map(i => opt(i + 1, "Tháng " + (i + 1), i === 0)).join("");
+  const y0 = +INS.period[0].slice(0, 4), y1 = +INS.period[1].slice(0, 4);
+  document.getElementById("tqYear").innerHTML = opt(y0, `${y0} hoặc trước đó`, true) +
+    [...Array(y1 - y0).keys()].map(i => opt(y0 + i + 1, y0 + i + 1)).join("");
+  document.getElementById("tqGo").addEventListener("click", runTQ);
+  document.getElementById("tqDownload").addEventListener("click", downloadCard);
+  if (navigator.canShare) document.getElementById("tqShare").hidden = false;
+  document.getElementById("tqShare").addEventListener("click", shareCard);
+}
+
+function runTQ() {
+  const key = document.getElementById("tqCity").value, c = INS.cities[key];
+  const bd = +document.getElementById("tqDay").value, bm = +document.getElementById("tqMonth").value;
+  const y = +document.getElementById("tqYear").value;
+  const start = y <= +INS.period[0].slice(0, 4) ? INS.period[0] : `${y}-01-01`;
+  const days = c.daily.filter(r => r[0] >= start);
+  const total = days.reduce((a, r) => a + r[1], 0);
+  const good = days.filter(r => r[1] <= 15).length;
+  const sorted = [...days].sort((a, b) => a[1] - b[1]);
+  const md = `${pad(bm)}-${pad(bd)}`;
+  const bdays = [...new Set(days.map(r => r[0].slice(0, 4)))].map(yr => `${yr}-${md}`)
+    .filter(d => DAILY[key][d] != null).map(d => ({d, pm: DAILY[key][d]}));
+  TQ = {key, city: c, start, n: days.length, cig: Math.round(total / 22), good, clean: sorted[0], dirty: sorted[sorted.length - 1], bdays, bd, bm, days, pledge: null};
+
+  document.getElementById("tqLede").innerHTML =
+    `Từ ${dmy(start)} đến nay, ở ${c.name}, bạn đã hít lượng bụi mịn tương đương <b>${vn(TQ.cig, 0)} điếu thuốc</b>. ` +
+    `Trong ${vn(TQ.n, 0)} ngày, chỉ có <b>${vn(good, 0)}</b> ngày bạn được thở không khí đạt chuẩn của WHO.`;
+  document.getElementById("tqBday").innerHTML = bdays.length ? bdays.map(b =>
+    `<div style="border-color:${pmColor(b.pm)}">Sinh nhật ${b.d.slice(0, 4)}<b>${vn(b.pm, 0)}</b>µg/m³ · ${b.pm <= 15 ? "đạt chuẩn WHO" : `gấp ${vn(b.pm / 15)} lần WHO`}</div>`).join("")
+    : `<p class="small">Ngày ${bd}/${bm} không có trong khoảng dữ liệu (hoặc không tồn tại, như 30/2).</p>`;
+
+  const bset = new Set(bdays.map(b => b.d));
+  const rects = days.map((r, i) => `<rect x="${i}" y="3" width="1.02" height="9" fill="${pmColor(r[1])}"/>` +
+    (bset.has(r[0]) ? `<rect x="${i - 2}" y="0" width="5" height="2.4" fill="${css("--ink")}"/>` : "")).join("");
+  document.getElementById("tqStripe").innerHTML = `<svg viewBox="0 0 ${days.length} 12" preserveAspectRatio="none" role="img" aria-label="Dải ngày của bạn">${rects}</svg>`;
+
+  document.getElementById("tqExtremes").innerHTML = [
+    ["Ngày bạn thở sạch nhất", TQ.clean], ["Ngày bạn thở bẩn nhất", TQ.dirty],
+  ].map(([t, r]) => `<div><p class="caps" style="margin:0">${t}</p><span class="stat num" style="color:${pmColor(r[1])}">${vn(r[1], 0)}</span> <span class="small">µg/m³</span><p class="small" style="margin:4px 0 0">${fmtDay.format(new Date(r[0] + "T12:00"))}/${r[0].slice(0, 4)} · tương đương ${r[1] / 22 < 0.1 ? "dưới 0,1" : vn(r[1] / 22)} điếu thuốc trong ngày</p></div>`).join("") +
+    `<div><p class="caps" style="margin:0">Số ngày bạn được thở sạch</p><span class="stat num">${vn(good, 0)}</span> <span class="small">/ ${vn(TQ.n, 0)} ngày</span><p class="small" style="margin:4px 0 0">Ngày có trung bình 24h không quá 15 µg/m³ (chuẩn WHO)</p></div>`;
+
+  const base = doseFor(c, HABIT);
+  document.getElementById("tqPledge").innerHTML = PLEDGES.map(([id, text, change]) => {
+    const save = cigYear(base) - cigYear(doseFor(c, {...HABIT, ...change}));
+    return `<label><input type="radio" name="pledge" value="${id}"><span>${text}</span><span class="gain">−${vn(save, 0)} điếu/năm</span></label>`;
+  }).join("");
+  document.querySelectorAll('#tqPledge input').forEach(inp => inp.addEventListener("change", () => {
+    TQ.pledge = PLEDGES.find(p => p[0] === inp.value); drawCard();
+  }));
+
+  document.getElementById("tqResult").hidden = false;
+  drawCard();
+  document.getElementById("tqLede").scrollIntoView({behavior: "smooth", block: "start"});
+}
+
+// Xuống dòng chữ trên canvas, trả về y sau dòng cuối
+function wrapText(ctx, text, x, y, maxW, lh) {
+  let line = "";
+  for (const w of text.split(" ")) {
+    const test = line ? line + " " + w : w;
+    if (ctx.measureText(test).width > maxW && line) { ctx.fillText(line, x, y); line = w; y += lh; }
+    else line = test;
+  }
+  ctx.fillText(line, x, y);
+  return y + lh;
+}
+
+async function drawCard() {
+  if (!TQ) return;
+  await Promise.all(["600 80px Newsreader", "italic 500 80px Newsreader", "600 30px 'Be Vietnam Pro'", "400 30px 'Be Vietnam Pro'"].map(f => document.fonts.load(f, "Ạ")));
+  const cv = document.getElementById("card"), ctx = cv.getContext("2d");
+  const W = 1080, H = 1350, M = 80, INK = "#1d1b16", INK2 = "#5d584d", ACC = "#b8481f", PAPER = "#f5f2ea";
+  const COL = v => getComputedStyle(document.documentElement).getPropertyValue(pmVar(v)).trim();
+  ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = INK; ctx.textBaseline = "alphabetic";
+
+  ctx.font = "600 26px 'Be Vietnam Pro'"; ctx.fillStyle = INK2;
+  ctx.fillText("NHỊP THỞ ĐÔ THỊ  ·  BẠN ĐÃ TRẢI QUA NHỮNG GÌ?", M, 110);
+  ctx.fillStyle = INK; ctx.fillRect(M, 135, W - 2 * M, 3); ctx.fillRect(M, 143, W - 2 * M, 1);
+
+  ctx.font = "500 52px Newsreader";
+  ctx.fillText(`Sống ở ${TQ.city.name} từ ${dmy(TQ.start)},`, M, 230);
+  ctx.font = "600 230px Newsreader"; ctx.fillStyle = ACC;
+  ctx.fillText(vn(TQ.cig, 0), M - 8, 440);
+  ctx.fillStyle = INK; ctx.font = "italic 500 54px Newsreader";
+  ctx.fillText("điếu thuốc", M, 515);
+  ctx.font = "400 34px 'Be Vietnam Pro'"; ctx.fillStyle = INK2;
+  let y = wrapText(ctx, `là lượng bụi mịn PM2.5 tôi đã hít, quy đổi. Chỉ ${vn(TQ.good, 0)} trong ${vn(TQ.n, 0)} ngày đạt chuẩn của WHO.`, M, 575, W - 2 * M, 48);
+
+  // Dải ngày
+  y += 20;
+  const sw = (W - 2 * M) / TQ.days.length;
+  TQ.days.forEach((r, i) => { ctx.fillStyle = COL(r[1]); ctx.fillRect(M + i * sw, y, sw + 0.6, 90); });
+  y += 140;
+
+  // Sinh nhật
+  ctx.fillStyle = INK; ctx.font = "600 26px 'Be Vietnam Pro'";
+  ctx.fillText(`KHÔNG KHÍ NGÀY SINH NHẬT ${pad(TQ.bd)}/${pad(TQ.bm)}`, M, y);
+  y += 24;
+  const bw = (W - 2 * M - 20 * 4) / 5;
+  TQ.bdays.slice(-5).forEach((b, i) => {
+    const x = M + i * (bw + 20);
+    ctx.fillStyle = COL(b.pm); ctx.fillRect(x, y, bw, 10);
+    ctx.fillStyle = INK2; ctx.font = "400 26px 'Be Vietnam Pro'"; ctx.fillText(b.d.slice(0, 4), x, y + 50);
+    ctx.fillStyle = INK; ctx.font = "600 60px Newsreader"; ctx.fillText(vn(b.pm, 0), x, y + 115);
+  });
+  if (!TQ.bdays.length) { ctx.fillStyle = INK2; ctx.font = "400 28px 'Be Vietnam Pro'"; ctx.fillText("Không có trong khoảng dữ liệu.", M, y + 50); }
+  y += 190;
+
+  // Cam kết
+  ctx.fillStyle = INK; ctx.fillRect(M, y, W - 2 * M, 1); y += 60;
+  ctx.font = "600 26px 'Be Vietnam Pro'"; ctx.fillStyle = ACC; ctx.fillText("CAM KẾT CỦA TÔI", M, y); y += 56;
+  ctx.fillStyle = INK; ctx.font = "500 44px Newsreader";
+  y = wrapText(ctx, TQ.pledge ? TQ.pledge[1] + "." : "Chọn một cam kết trên trang để thêm vào đây.", M, y, W - 2 * M, 56);
+
+  ctx.fillStyle = INK; ctx.fillRect(M, H - 150, W - 2 * M, 1);
+  ctx.font = "600 30px 'Be Vietnam Pro'";
+  ctx.fillText("Bạn thì sao?  ngocthuan130607.github.io/nhip-tho-do-thi", M, H - 100);
+  ctx.fillStyle = INK2; ctx.font = "400 22px 'Be Vietnam Pro'";
+  ctx.fillText("Dữ liệu: CAMS, Open-Meteo · Quy đổi 22 µg/m³ trong 24 giờ ≈ 1 điếu thuốc (Berkeley Earth)", M, H - 62);
+}
+
+function cardBlob() { return new Promise(r => document.getElementById("card").toBlob(r, "image/png")); }
+async function downloadCard() {
+  const url = URL.createObjectURL(await cardBlob());
+  const a = Object.assign(document.createElement("a"), {href: url, download: "ban-da-trai-qua-nhung-gi.png"});
+  a.click(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+async function shareCard() {
+  const file = new File([await cardBlob()], "ban-da-trai-qua-nhung-gi.png", {type: "image/png"});
+  const data = {files: [file], title: "Bạn đã trải qua những gì?", text: "Xem không khí đã đi qua phổi bạn thế nào:", url: location.href};
+  try { if (navigator.canShare(data)) await navigator.share(data); else downloadCard(); } catch (e) { /* người dùng huỷ */ }
+}
+
+let fcChart;
+function renderPlan() {
+  const d = live[CITY], body = document.getElementById("planBody");
+  if (!d) { body.innerHTML = `<tr><td colspan="4" class="err">Chưa tải được dự báo, hãy thử tải lại trang.</td></tr>`; return; }
+  const len = +document.getElementById("act").value;
+  body.innerHTML = windows(d, len).map(w => `<tr><td>${fmtDay.format(new Date(w.day + "T12:00"))}</td>
+    <td class="t"><span class="sq" style="background:${pmColor(w.best.avg)}"></span> ${pad(w.best.start)}:00–${pad(w.best.start + len)}:00 <span class="small">~${Math.round(w.best.avg)} µg/m³</span></td>
+    <td>${pad(w.worst.start)}:00–${pad(w.worst.start + len)}:00 <span class="small">~${Math.round(w.worst.avg)}</span></td>
+    <td><b>−${Math.round(100 * (1 - w.best.avg / w.worst.avg))}%</b></td></tr>`).join("");
+  const fut = futureHours(d), ink = css("--ink-2");
+  fcChart?.destroy();
+  fcChart = new Chart(document.getElementById("fcChart"), {
+    type: "bar",
+    data: {labels: fut.map(x => `${x.t.slice(8, 10)}/${x.t.slice(5, 7)} ${x.h}h`),
+      datasets: [{data: fut.map(x => x.v), backgroundColor: fut.map(x => pmColor(x.v)), barPercentage: 1, categoryPercentage: 1}]},
+    options: {maintainAspectRatio: false, plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => `${vn(c.raw)} µg/m³`}}},
+      scales: {x: {ticks: {color: ink, maxTicksLimit: 6, maxRotation: 0, autoSkip: true}, grid: {display: false}},
+               y: {beginAtZero: true, ticks: {color: ink}, grid: {color: css("--rule")}}}},
+  });
+}
+
+function renderCalendar(c) {
+  document.getElementById("calBody").innerHTML = c.monthly.map(m => `<tr class="${m.month === curMonth ? "cur" : ""}">
+    <td>Tháng ${m.month}</td>
+    <td class="t"><span class="sq" style="background:${pmColor(m.best_pm)}"></span> ${pad(m.best_h)}–${pad(m.best_h + 2)}h <span class="small">~${Math.round(m.best_pm)}</span></td>
+    <td><span class="sq" style="background:${pmColor(m.worst_pm)}"></span> ${pad(m.worst_h)}–${pad(m.worst_h + 2)}h <span class="small">~${Math.round(m.worst_pm)}</span></td>
+    <td><span class="mini" style="width:${m.qcvn_pct}px;background:var(--accent)"></span>${m.qcvn_pct}%</td></tr>`).join("");
+}
+
+function renderCity() {
+  const c = INS.cities[CITY];
+  renderC1(c); renderC2(c); renderC3(c); renderC4(c); renderRecs(c); renderCalendar(c); calcExposure();
+  if (live[CITY]) renderPlan();
+}
+
+/* ================= Khởi động ================= */
+document.getElementById("today").textContent = new Intl.DateTimeFormat("vi-VN", {weekday: "long", day: "numeric", month: "long", year: "numeric"}).format(new Date()) + " · Hà Nội & TP. Hồ Chí Minh";
+
+document.querySelector(".seg").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b || !INS) return;
+  CITY = b.dataset.city;
+  document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  renderCity();
 });
+["hrs", "when", "mode", "mask", "indoor"].forEach(id => document.getElementById(id).addEventListener("input", () => INS && calcExposure()));
+document.getElementById("act").addEventListener("change", renderPlan);
+
+const liveReady = Promise.allSettled(Object.keys(CITIES).map(k => loadLive(k).then(() => renderNow(k))
+  .catch(() => { document.getElementById("now-" + k).innerHTML = `<span class="err">Không tải được số liệu ${CITIES[k].name}.</span>`; })));
 
 fetch("data/insights.json").then(r => r.json()).then(j => {
-  INS = j; renderHistoryStatic(); renderHistory("hanoi");
-}).catch(() => { document.getElementById("kpis").innerHTML = `<p class="err">Không tải được dữ liệu lịch sử.</p>`; });
+  INS = j;
+  for (const k in j.cities) DAILY[k] = Object.fromEntries(j.cities[k].daily);
+  renderLede(); renderStripes(); onThisDay(); initTQ(); renderCity();
+  liveReady.then(renderPlan);
+}).catch(() => { document.getElementById("lede").textContent = "Không tải được dữ liệu lịch sử."; });
 </script>
 </body>
 </html>
