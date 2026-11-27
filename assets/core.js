@@ -70,9 +70,9 @@ function renderShell(active) {
   nav.className = "wrap nav";
   nav.innerHTML = `<div class="bar glass">
     <a class="brand" href="index.html">Nhịp Thở <i>Đô Thị</i></a>
-    <nav class="links" aria-label="Các trang">${PAGES.map(p =>
+    <nav class="links" aria-label="Các trang">${PAGES.filter(p => p.key !== "me").map(p =>
       `<a href="${p.href}"${p.key === active ? ' aria-current="page"' : ""}>${p.key === "road" ? "Lộ trình" : p.label}</a>`).join("")}</nav>
-    <a class="btn primary cta" href="trai-qua.html">Bạn đã thở gì?</a></div>`;
+    <a class="btn primary cta" href="trai-qua.html"${active === "me" ? ' aria-current="page"' : ""}>Bạn đã trải qua những gì?</a></div>`;
   document.body.prepend(nav);
 
   const i = PAGES.findIndex(p => p.key === active);

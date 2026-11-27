@@ -61,6 +61,7 @@ b,strong{font-weight:500}
 .btn:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35)}
 .btn.primary{background:var(--sky);border-color:var(--sky);color:#04213a;font-weight:500}
 .btn.primary:hover{background:var(--sky-2)}
+.btn.primary[aria-current="page"]{background:var(--sky-2);box-shadow:0 0 0 3px rgba(143,216,255,.3)}
 .btn:disabled{opacity:.4;cursor:default}
 .icon-btn{width:40px;height:40px;padding:0;justify-content:center}
 
@@ -226,7 +227,11 @@ input[type=range]{width:100%;accent-color:var(--sky)}
 @media (max-width:760px){
   .nav{top:8px}
   .nav .bar{padding:6px 6px 6px 14px}
-  .nav .cta{display:none}
+  .nav .bar{flex-wrap:wrap;border-radius:24px;padding:8px}
+  .nav .brand{padding-left:8px}
+  .nav .brand{font-size:.92rem}
+  .nav .cta{order:2;margin-left:auto;padding:7px 11px;font-size:.74rem}
+  .links{order:3;flex-basis:100%}
   .links{justify-content:flex-start}
   .recs{grid-template-columns:1fr}
   .share{grid-template-columns:1fr}
